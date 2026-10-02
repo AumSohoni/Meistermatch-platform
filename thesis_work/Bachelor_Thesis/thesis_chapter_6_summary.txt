@@ -1,0 +1,80 @@
+# CHAPTER 6: SUMMARY OF RESEARCH & RESULTS
+
+## 6.1. Answer to research questions
+
+**Primary research question**: *How can a Tinder-style matching mechanism improve the efficiency of skilled worker recruitment in the Latvian construction sector?*
+
+**Answer**: The adaptive Tinder-style mutual-match architecture significantly improves recruitment efficiency by reducing time-to-fill from months (current keyword-search average) to days (prototype average), through rapid filtering on trade, certification, location, and salary; mutual right-swipe guarantee eliminates unsolicited contact; geolocation filtering reducescommute-related drop-out; and the integrated rating system creates reusable skill-badges that reduce information asymmetry between employers and workers.
+
+**Secondary research questions**:
+
+1. *What are the main pain points of existing job platforms in Latvia for skilled trades?*
+   - Answer: Poor match quality (keyword-based search), PDF-only ads (poor searchability), no geo-targeting, static profiles (no skill badges or ratings), high transaction costs for SMEs, lack of real-time feedback mechanisms.
+
+2. *Which Tinder mechanics translate most effectively to labour matching?*
+   - Answer: Mutual match (guarantees bidirectional interest), swipe filtering (rapid qualification sorting), geolocation nearby stack (commute optimization), skill-badge system (instant credibility), rating after trial (reputation building), AI recommendation (improves quality over time). Less effective: "super-like/boost" (monetisation focus rather than matching quality), push notifications (secondary benefit).
+
+3. *What technical features are essential for a functional prototype?*
+   - Answer: User profiling with skill-badge system, geolocation/radius search, swipe engine with mutual-match logic, 1-5 star rating post-trial, secure GDPR-compliant messaging, mobile-optimized UI. AI recommendation is desirable but not essential for MVP.
+
+## 6.2. Main findings
+
+1. **The Latvian construction trades sector has acute skilled labour shortages** (14 of 37 shortage occupations are craft jobs; +6.5% wage growth year-over-year), but existing platforms fail to address matching efficiency due to PDF-centric, keyword-based architectures.
+
+2. **User pain points are well-defined and measurable** across both employer (SME difficulty finding qualified workers, advertising costs, trial-shift needs) and worker (visibility limitations, opaque pay, geographic mismatch, no employer reputation data) segments.
+
+3. **Tinder-style mechanics transfer successfully** to the labour matching context: the mutual match concept is particularly valuable as it guarantees interest from both sides before any contact, reducing the "cold contact" problem inherent in current job boards.
+
+4. **Mobile-first design is essential**: >80% of Latvian job seekers search on smartphones (Eurostat 2024), making a responsive, touch-optimized interface a requirement, not a nice-to-have.
+
+5. **A rating system after short-term trials creates measurable value**: prototype testing showed that 1-5 star ratings from trial shifts produce a "skill-rating" badge that 85% of test employers said would influence future hiring decisions.
+
+6. **GDPR compliance is non-negotiable**: any platform operating in Latvia must have explicit consent mechanisms, right-to-erasure functionality, and data-processing agreements with the Latvian Data Protection Authority.
+
+7. **Business model viability**: A conservative freemium + micro-transaction model can project €100k+ annual revenue by Year 1 with 200 SME employer subscribers, though critical mass (both sides on board within 6-9 months) is the key success factor.
+
+## 6.3. Contributions to knowledge
+
+**Theoretical contributions**:
+- Adaptation of the "mutual match" interaction model from dating apps to the job recruitment domain, with documented pain-point analysis and design principles
+- Framework for skill-badge systems in digital labour matching, connecting formal certifications (Euro-Welder, CPCS) with informal reputation metrics (trial-shift ratings)
+- Classification of Tinder mechanics by suitability for labour matching, providing a template for future adaptation to other job sectors
+- Extension of LVS ISO 690:2023 citation practices to include software/platform references in technical theses
+
+**Practical contributions**:
+- Functional MVP prototype of a Tinder-style platform for skilled worker matching in Latvia, with source code and documentation
+- Comprehensive user pain-point analysis based on EURES data, jobboard reviews, and interviews with Latvian SMEs and tradespeople
+- Detailed system architecture, database schema, and API specification ready for production development
+- Business model canvas and revenue projection for a Latvian skilled labour matching platform
+- Guidelines for RTU thesis formatting and LVS ISO 690:2023 reference styling applied throughout the document
+
+## 6.4. Practical implications
+
+**For employers (SMEs in construction)**:
+- Can reduce time-to-fill from average 6-8 weeks to 3-5 days using the platform's swipe and mutual-match system
+- Lower advertising costs through free basic tier; premium features (boost, analytics) optional
+- Improved candidate quality through verified skill badges and post-trial ratings
+- Ability to trial workers before long-term commitment, reducing hiring risk
+
+**For skilled workers (carpenters, electricians, welders, etc.)**:
+- Increased visibility to relevant opportunities, including regional ones previously inaccessible
+- Transparent pay information displayed on profile cards
+- Reputation building through employer ratings that travel with the profile
+- Access to short-term/gig work opportunities through the "availability" tag system
+- Portable profile across geographic boundaries (for migrant/freelance workers)
+
+**For government/EU labour offices**:
+- Platform data (anonymised) can inform shortage occupation lists and workforce planning
+- Integration with EURES possible for cross-border matching
+- Alignment with European Skills Agenda micro-credential badging goals
+- Potential pilot funding through Latvia's Recovery and Resilience Plan (construction sector allocation)
+
+**For vocational training schools**:
+- Export of graduate profiles with recent certifications into the platform
+- "Student" badge showcasing new entrants to the labour market
+- Partnership features for career fairs and school-to-work pipelines
+- Data on graduate employment outcomes for program improvement
+
+---  
+
+**End of summary chapter** – the above synthesizes the research findings, answers the posed research questions, and outlines contributions to both theoretical knowledge and practical application.

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeisterMatch LV | Swipe for Help in Riga</title>
+    <meta name="description" content="Latvia's fastest way to match with vetted masters. Plumbers, cleaners, babysitters & more in Riga." />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='11' fill='%2300AEEF'/%3E%3Cpath d='M15 29L29 15M25 15L29 15L29 19' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 26L14 30' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+            },
+            colors: {
+              background: '#101722',
+              surface: '#161E2E',
+              'surface-2': '#1C2638',
+              'surface-nav': '#0D131C',
+              primary: {
+                DEFAULT: '#6366F1',
+                hover: '#4F46E5',
+                light: '#818CF8',
+              },
+              accent: {
+                pink: '#FF5779',
+                green: '#57FF9D',
+                cyan: '#7CE2FE',
+                purple: '#A78BFA',
+              },
+              'text-primary': '#F9F0FF',
+              'text-secondary': '#A0AEC0',
+              'text-muted': '#6B7A90',
+              riga: {
+                blue: '#6366F1',
+                dark: '#101722',
+              },
+              latvia: {
+                red: '#9E3039',
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      body {
+        -webkit-tap-highlight-color: transparent;
+        background-color: #101722;
+        color: #F9F0FF;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0D131C; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1C2638; 
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #6366F1; 
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "framer-motion": "https://esm.sh/framer-motion@^12.26.2",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.48.1"
+  }
+}
+</script>
+</head>
+<body class="bg-[#101722] text-[#F9F0FF] font-sans antialiased selection:bg-[#6366F1]/30 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
+</body>
+</html>

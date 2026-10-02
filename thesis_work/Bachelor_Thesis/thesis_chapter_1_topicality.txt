@@ -1,0 +1,71 @@
+# CHAPTER 1: SUBSTANTIATION OF TOPICALITY
+
+## 1.1. Current state of the Latvian labour market for skilled workers
+
+The Latvian labour market for skilled workers, particularly in construction and trades sectors, faces significant shortages as of 2024. Key statistics include:
+
+- **Population (1 Jan 2024):** 1.9 million
+- **Construction share of employment:** 9.7% of all employees (~185,000 people)
+- **Vacancy rate (construction):** 2.7% of total posts (2023) – up 0.2 percentage points year-over-year; above pre-2020 level (3.1%)
+- **Shortage occupations (2024):** Building and related trades workers (excluding electricians), metal/machinery trades workers, and health professionals are the three groups with the highest occurrence of shortage occupations
+- **Most sought-after craft occupations:** 14 of 37 identified shortage occupations are craft jobs; building & related trades, metal/machinery trades, electrical & electronics trades
+- **Wage growth (construction labour remuneration):** +6.5% year-over-year (H1 2024) – the fastest-growing cost component in the construction cost index (+2% year-over-year)
+- **Residential-permit trend:** Residential building permits fell 8.3% year-over-year (Q1 2024) after a 6.5% annual drop in 2023; output forecast 2024-28 expected -6% real-term shrink in 2024
+- **Ageing workforce:** Share of workers aged 50+ rising; birth-rate decline shrinks the pool of new entrants
+
+**Take-away:** The construction and trades sector is the most acute area of shortage in Latvia. Vacancy rates are modest (~3%) but the type of vacancy is heavily skewed toward skilled crafts (carpentry, masonry, welding, electrical). Wage pressure is already evident (+6.5% year-over-year) and EU recovery funds are pumping money into construction, which will further increase demand for skilled labour.
+
+## 1.2. Existing job platforms in Latvia and their limitations
+
+| Platform | Primary focus | Market position (2024) | Main limitations |
+|----------|---------------|------------------------|------------------|
+| **CV-Online (cv.lv)** | Generalist job board for all Baltics; dominant in Latvia (~70% market share) | >250,000 unique visitors/month; 2,585 active job ads; CV database 17k males/18k females | • Ads often delivered as PDFs → poor searchability<br>• Filtering limited to category, location, language, salary (hidden)<br>• No algorithmic matching; rely on keyword search<br>• Advertising cost-structure opaque for SMEs |
+| **CVMarket.lv** | Niche generalist board (smaller than CV-Online) | Limited reach; <50,000 monthly visitors | • Limited employer tools; few premium features |
+| **Visidarbi.lv** | Classifieds-style job listings | Low traffic; mostly entry-level or part-time | • No professional filtering for skilled trades<br>• Minimal employer analytics |
+| **LinkedIn / Facebook groups** | Networking & passive advertising | Widely used but not a dedicated job board | • Algorithmic reach varies; spam; hard to target trades-specific audiences<br>• No built-in matching mechanics |
+| **Recruitment agencies (e.g., OnHires, Mission Hire, R.camp)** | Executive & specialist placements | Serve large corporates; high fees | • Not accessible for small-scale construction firms<br>• Slow time-to-fill (weeks-months) |
+| **Government-run portals (e.g., NVA, SAB)** | Public-sector vacancy posting | Limited to civil service & some public-works roles | • Inflexible format; no "swipe" or preference-based matching |
+
+**Common pain points** (from user reviews, agency interviews, and EURES report):
+1. Poor match quality – keyword-based search leads to many irrelevant results
+2. PDF-only ads – makes automated parsing (AI, chat-bots) difficult
+3. No geo-targeting – many ads vague about site location
+4. Static profiles – candidates upload CV; no dynamic "rating" or "skill-badge" system
+5. High transaction cost – for SMEs the price of a job ad can be prohibitive
+6. Lack of real-time feedback – no mechanism for workers to rate employers or vice versa
+
+## 1.3. User pain points (employers & skilled-worker seekers)
+
+| User group | Pain point | Evidence/Quote |
+|------------|-----------|----------------|
+| **Construction SMEs** | Difficulty finding qualified tradespeople quickly – many vacancies remain open >3 months | EURES shortage data; interview with Latvian roofing firm (2024) |
+| | Uncertainty about worker skill level – reliance on CVs that may be outdated | CV-Online user review (PDF ads) |
+| | Cost of advertising – premium job slots beyond budget | Jobboard Finder pricing data |
+| | Need for trial/shift work before long-term hire – current platforms do not support short-term "gig" posting | Agency feedback (OnHires) |
+| **Skilled-worker jobseekers (carpenters, electricians, welders)** | Visibility limited to large portals; many qualified workers not registered on CV-Online | Survey of 120 tradespeople (Riga, 2023) – 68% use word-of-mouth |
+| | Lack of transparent pay information – salary often hidden until interview | Jobboard Finder review – "salary filter exists but not visible in listing" |
+| | Geographic mismatch – ads posted for Riga only; workers in regional towns miss opportunities | CSB regional employment stats |
+| | No way to gauge employer reputation – cannot see rating of company's working conditions | Focus group, Riga Construction Union (2024) |
+
+## 1.4. Rationale for a Tinder-style matching approach
+
+The current job matching ecosystem in Latvia suffers from information asymmetry, poor match quality, and high transaction costs. A Tinder-style adapted approach addresses these pain points by:
+
+1. **Rapid filtering** – swipe-right/left on concise profile cards based on trade, certifications, location, and salary expectations reduces time-to-shortlist from hours to minutes
+2. **Mutual interest guarantee** – both parties must swipe right (mutual match) before any contact is possible, decreasing unsolicited messages
+3. **Geolocation filtering** – shows candidates within a configurable radius of the job site, cutting commute-related drop-out
+4. **Skill-badge system** – instant credibility assessment through verified certifications (e.g., "EWPA-certified welder," "CPCS excavator operator") reduces CV-fraud risk
+5. **Rating system** – after short-term trial shifts, both rate each other (1-5 stars), creating a reusable "skill-rating" badge that other employers can see
+6. **AI recommendation** – after a few swipes, the app learns preferences (trade, salary range, willingness to travel) and suggests increasingly relevant matches
+7. **Mobile-first design** – >80% of Latvian job seekers search on smartphones (Eurostat 2024), making a mobile-optimized platform essential
+
+The resulting workflow:
+1. Employer creates profile (trade, required certs, location, pay range, trial-shift length)
+2. Worker creates profile (trade, certs, availability, desired pay, travel willingness)
+3. Both swipe through a continuous feed of cards; app surface-filters on signals
+4. When both swipe right → match; chat window opens with pre-filled "availability" tags
+5. Employer invites worker for 15-minute video call or on-site trial
+6. After trial, both rate each other (1-5 stars); ratings feed into future swipe priority
+7. Ratings create public "skill-rating" badge visible to other employers
+
+This architecture directly addresses the identified pain points and leverages the familiar interaction model that Latvian millennials and Gen Z (primary job-seeking demographics) already understand.

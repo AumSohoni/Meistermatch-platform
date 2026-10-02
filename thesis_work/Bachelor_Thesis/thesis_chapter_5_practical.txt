@@ -1,0 +1,450 @@
+# CHAPTER 5: PRACTICAL / PROJECT PART
+
+## 5.1. System architecture overview
+
+The proposed Tinder-style platform for matching skilled workers with employers in Latvia follows a mobile-first, cloud-based architecture. The system is designed to handle user registration, profile management, geolocation-based matching, swipe mechanics, mutual-match detection, rating systems, and secure messaging.
+
+### 5.1.1. High-level architecture components
+
+| Layer | Technology | Function |
+|-------|-----------|----------|
+| **Presentation** | React Native (cross-platform) or Flutter | Mobile frontend for iOS and Android; provides native-like experience with swipe gestures, geolocation, and push notifications |
+| **Application Logic** | Node.js with Express OR Go with Gin | Backend server handling API requests, authentication, swipe engine logic, match management, and rating calculations |
+| **Database** | PostgreSQL with PostGIS extension | Relational data storage for users, profiles, matches, ratings, and messages; PostGIS for geospatial queries (radius search) |
+| **Cache/Real-time** | Redis | Fast state persistence for swipe decisions, online user status, and real-time match notifications via WebSockets |
+| **File Storage** | Amazon S3 / Google Cloud Storage | Store user-uploaded certificates, profile photos, and demonstration videos |
+| **AI/Recommendation** | TensorFlow Lite (on-device) or lightweight Python service | Basic collaborative-filtering + content-based filtering on skill-badges, location, and salary preferences |
+| **Messaging** | Firebase Cloud Messaging (FCM) | Push notifications for new matches and messages; end-to-end encryption via Signal protocol integration |
+| **GDPR Compliance** | Consent management module | Explicit opt-in for data processing, right-to-erasure endpoints, data-minimisation defaults |
+
+### 5.1.2. Data flow diagram (simplified)
+
+1. **User onboarding** → Registration → Profile creation (trade, certs, location, preferences)
+2. **Profile data** → Stored in PostgreSQL + skill-badges indexed
+3. **Geolocation input** → Latitude/longitude stored; PostGIS calculates radius searches
+4. **Swipe action** → Frontend sends swipe direction to backend → Redis updates user state → Backend checks mutual match condition → If matched → unlock chat
+5. **AI recommendation** → Backend serves next profile card based on preference vector + collaborative filtering
+6. **Trial shift & rating** → Post-trial, both parties rate each other (1-5 stars) → Ratings stored → Average rating exposed on profile
+7. **Messaging** → Mutual match triggers chat unlock → End-to-end encrypted messages via Firebase
+
+## 5.2. User profiling and skill-badge system
+
+### 5.2.1. Employer profile structure
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `user_id` | UUID | Primary key, linked to auth system |
+| `company_name` | Varchar(255) | Registered business name |
+| `trade_specialisation` | Varchar(100) | Primary trade (e.g., "carpentry", "electrical", "masonry") |
+| `required_certifications` | JSON Array | Mandatory certifications (e.g., ["EWPA Welder", "CPCS Excavator"]) |
+| `pay_range_min` | Numeric | Minimum monthly salary in EUR |
+| `pay_range_max` | Numeric | Maximum monthly salary in EUR |
+| `location` | Point (PostGIS) | Company/or job site geolocation |
+| `willing_to_relocate` | Boolean | Whether employer considers candidates from other regions |
+| `trial_shift_length` | Integer | Duration of trial shift in hours (default 4) |
+| `rating_average` | Numeric (1-5) | Calculated from completed trial ratings |
+| `created_at` | Timestamp | Profile creation date |
+| `updated_at` | Timestamp | Last profile update |
+
+### 5.2.2. Worker profile structure
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `user_id` | UUID | Primary key, linked to auth system |
+| `full_name` | Varchar(100) | Real name |
+| `trade_specialisation` | Varchar(100) | Primary trade (e.g., "carpentry", "electrical", "welding") |
+| `years_experience` | Integer | Total years in the trade |
+| `certifications` | JSON Array | Held certifications (e.g., ["City & Guilds Level 3", "OSHA 10"]) |
+| `location` | Point (PostGIS) | Current residence or willingness-to-relocate area |
+| `desired_pay_min` | Numeric | Minimum acceptable monthly salary in EUR |
+| `desired_pay_max` | Numeric | Maximum acceptable monthly salary in EUR |
+| `availability` | Varchar(50) | e.g., "immediate", "within 2 weeks", "available summers" |
+| `willing_to_relocate` | Boolean | Willingness to move for work |
+| `rating_average` | Numeric (1-5) | Average from previous employer trials |
+| `profile_photo_url` | Text | URL to uploaded profile photo |
+| `created_at` | Timestamp | Profile creation date |
+| `updated_at` | Timestamp | Last profile update |
+
+### 5.2.3. Skill-badge system
+
+- **Badge schema**: `{code: string, name: string, issuer: string, year: integer, verification_url: text}`
+- **Common construction badges**: 
+  - `EWPA` – European Woodworking Platform Welder certification
+  - `CPCS` – Construction Plant Competence Scheme (excavator/loader operator)
+  - `City & Guilds` – Vocational qualification levels 1-3
+  - `OSHA 10/30` – Occupational safety certification (US, but accepted internationally)
+  - `RG certification` – Latvian building code compliance
+  - `Green Card` – Site safety passport (common in EU construction)
+- **Verification**: Certificates uploaded as PDF → OCR extraction → stored in S3 → verification URL generated → badge displays "verified" status on profile card
+- **Badge display**: Small icon on profile card; clicking reveals full details and verification link
+
+## 5.3. Geolocation and radius search
+
+### 5.3.1. Implementation
+
+- **Coordinates storage**: Both employer and worker profiles store `POINT(latitude, longitude)` using PostGIS
+- **Radius search query**: 
+  ```sql
+  SELECT * FROM users 
+  WHERE ST_DWithin(
+    employer.location, 
+    worker.location, 
+    :radius_km * 1000  -- convert km to meters
+  )
+  AND employer.trade_specialisation = worker.trade_specialisation
+  ```
+- **User control**: 
+  - "Show me within 50km of Riga"
+  - "Willing to relocate – show all Latvia"
+  - "Hide my exact location; show only region"
+- **Consent mechanism**: GDPR-compliant location permission request on first app launch; option to use city-level instead of exact coordinates
+
+### 5.3.2. Geofencing for trial shifts
+
+- When a mutual match occurs, the system can suggest nearby trial-shift locations
+- Employer can set "trial zone" – e.g., "only candidates within 30km"
+- Worker receives notification if they enter the trial zone
+- Supports on-site short-term project matching
+
+## 5.4. Swipe engine and mutual-match logic
+
+### 5.4.1. Swipe mechanics
+
+- **Card display**: Each card shows truncated profile: trade, 1-2 skill badges, distance, pay indication, rating stars
+- **Swipe actions**: 
+  - Right = "Interested" (like)
+  - Left = "Not interested" (dislike)
+  - Up = "Super-like" (premium feature)
+  - Down = "Pass"
+- **State persistence**: 
+  - Local storage on device for offline swipe history
+  - Backend Redis cache for real-time sync across devices
+  - Database table `swipes(user_id, candidate_id, direction, timestamp)` for audit and analytics
+
+### 5.4.2. Mutual-match algorithm
+
+```
+Algorithm: mutual_match(user_id, candidate_id)
+1. Check if both users have swiped right on each other:
+   - Query DB: SELECT * FROM swipes 
+     WHERE (user_id = A AND candidate_id = B AND direction = 'right')
+       OR (user_id = B AND candidate_id = A AND direction = 'right')
+2. If both right-swipes exist AND not already matched:
+   - Insert record INTO matches(user_id=A, candidate_id=B, matched_at=NOW())
+   - Unlock chat functionality for both parties
+   - Send push notifications to both users
+3. If only one right-swipe:
+   - Store the swipe for future reference
+   - Do NOT unlock chat
+   - Continue swipe feed
+4. If no right-swipes:
+   - Return to step 1 on next profile presentation
+```
+
+### 5.4.3. Swipe fatigue prevention
+
+- After 20 swipes in 15 minutes, suggest a break
+- AI recommendation every 5th card based on preference learning
+- "Reset swipes" daily – old swipes expire after 24 hours
+- "Hide shown profiles" option – users can mark profiles they've seen
+
+## 5.5. AI recommendation engine
+
+### 5.5.1. Preference learning model
+
+The system learns user preferences from swipe behavior to improve match quality over time.
+
+**Feature vector per profile**: `[trade_encoded, years_experience, certification_count, pay_min, pay_max, location_distance, rating]`
+
+**Preference vector per user**: Updated after each swipe using simple gradient descent:
+- If swipe right → increase weight for matching features
+- If swipe left → decrease weight
+
+**Algorithm**: 
+1. **Content-based filtering**: Match profiles where `trade_specialisation` matches user's most-swiped trade, and certification overlap > 50%
+2. **Collaborative filtering**: Anonymised swipe-pattern analysis – if users with similar swipe history to User X also swiped right on Candidate Y, suggest Candidate Y to User X
+3. **Hybrid approach**: 70% content-based + 30% collaborative filtering for new users (cold start)
+
+### 5.5.2. Implementation options
+
+- **On-device (TensorFlow Lite)**: Low latency, preserves privacy, works offline; model size ~200KB
+- **Backend service (Python/Flask)**: More complex models, requires internet connection, can handle larger datasets
+- **Recommended for MVP**: On-device lightweight model with monthly preference vector sync to backend for aggregate analytics
+
+### 5.5.3. Cold-start solution
+
+- New users complete a "preference setup" questionnaire (trade, salary range, max distance, certifications)
+- Initial recommendations based on questionnaire + matching with profiles having those exact attributes
+- After 10 swipes, ML model begins learning from actual behavior
+
+## 5.6. Rating and review system
+
+### 5.6.1. Rating schema
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `rating_id` | UUID | Primary key |
+| `rater_id` | UUID | User who gives the rating (employer or worker) |
+| `ratee_id` | UUID | User who receives the rating |
+| `shift_date` | Date | Date of completed trial shift |
+| `rating_value` | Integer (1-5) | star rating |
+| `comment` | Text (max 500 chars) | Free-form feedback |
+| `related_match_id` | UUID | Link to the match that produced this trial |
+| `created_at` | Timestamp | When rating was submitted |
+| `is_public` | Boolean | Whether rating visible on public profile (default: true) |
+
+### 5.6.2. Rating calculation
+
+- **Simple average**: `AVG(rating_value)` over all public ratings for a user
+- **Weighted average**: New ratings weighted higher using exponential decay:
+  `weight = e^(-days_since_shift / 90)` – recent ratings matter 3x more than year-old ratings
+- **Minimum sample size**: At least 3 ratings required before average displays on profile
+- **Outlier handling**: Ratings outside 1-5 range rejected; extreme values (>4 std dev from mean) flagged for review
+
+### 5.6.3. Rating badges
+
+- **5.0 stars**: "Elite performer" badge on profile
+- **4.5+ stars**: "Highly recommended" badge
+- **3.5-4.4 stars**: "Reliable" badge
+- **Below 3.5 stars**: No special badge; system suggests skill development resources
+
+### 5.6.4. Dispute resolution
+
+- If either party disputes a rating, they can submit a flag
+- Admin review within 48 hours
+- Disputed ratings temporarily hidden; if upheld, rating removed; if rejected, rating stands with note
+
+## 5.7. Secure messaging
+
+### 5.7.1. Architecture
+
+- **Mutual match triggers**: When `matches` table records a mutual right-swipe, the chat API endpoint becomes accessible
+- **End-to-end encryption**: 
+  - Signal Protocol implemented via library (e.g., `swrve`, `signal-node`)
+  - Keys generated per chat session; stored only on client devices
+  - Server forwards encrypted messages; cannot read content
+- **Message TTL**: Messages auto-delete after 30 days (configurable); users can manually delete
+- **Typing indicators**: Via WebSocket keep-alive; no message content exposed to server
+
+### 5.7.2. Features
+
+| Feature | Description |
+|---------|-------------|
+| **Pre-filled tags** | Match screen suggests: "Available this week?", "Trial shift 4h?", "Relocation willing?" |
+| **Quick replies** | Canned responses: "Interested", "Available Monday", "What's the pay?" |
+| **File sharing** | Share certificate photos, within 5MB limit, encrypted |
+| **Block/report** | User can block/unmatch; report rating or behavior to admin |
+| **Offline messaging**: Store messages server-side until user reconnects; FCM push notification when new message arrives |
+
+### 5.7.3. GDPR compliance in messaging
+
+- All messages linked to `match_id`; no personal data in message payload beyond what's necessary for the conversation
+- Right to erasure: User can request deletion of all messages related to a specific match
+- Data processing agreement: Clear statement in onboarding about message storage (30-day TTL, encrypted)
+
+## 5.8. Premium features and monetisation
+
+### 5.8.1. Freemium tier (free)
+
+- 10 swipes per day
+- 3 job ads visible at a time
+- Basic profile creation
+- Mutual matching and chat
+- Rating after trial shifts
+
+### 5.8.2. Premium tier (monthly subscription)
+
+| Feature | Price (EUR/month) |
+|---------|------------------|
+| Unlimited swipes | €30 |
+| Profile boost (appears at top of feed for 24h) | Included |
+| Advanced analytics (swipe conversion, match rate) | Included |
+| Unlimited candidate contacts | Included |
+| Verify worker certifications (OCR service) | Included |
+| "Super-like" 5 per month | Included |
+| Ad-free experience | Included |
+
+### 5.8.3. Pay-per-use features
+
+| Feature | Price |
+|---------|-------|
+| Single Boost | €5 |
+| Super-like (single use) | €2 |
+| Certification verification (per certificate) | €3 |
+| Additional trial-shift slot (beyond free tier) | €10 |
+
+### 5.8.4. Worker premium options
+
+| Feature | Price (one-time or annual) |
+|---------|---------------------------|
+| Verified badge (certificate OCR + reference check) | €15/year |
+| Profile highlight (appears at top in trade category) | €10/month |
+| Skill development course discounts | Partnership deals |
+
+### 5.8.5. Revenue projection (Year 1, conservative)
+
+| Stream | Q1 | Q2 | Q3 | Q4 | Total |
+|--------|-----|-----|-----|-----|-------|
+| Employer freemium → premium conversion (20% of 200 SMEs) | €3,600 | €3,600 | €3,600 | €3,600 | €14,400 |
+| Job ad posting fees (250 ads/year × €35) | €8,750 | €8,750 | €8,750 | €8,750 | €35,000 |
+| Boost/super-like micro-transactions (1000/yr × €10) | €2,500 | €2,500 | €2,500 | €2,500 | €10,000 |
+| Premium candidate profiles (500 × €15) | €750 | €750 | €750 | €750 | €3,000 |
+| API data licensing | €3,750 | €3,750 | €3,750 | €3,750 | €15,000 |
+| Trial-shift marketplace fees (2% of first-year salaries, ~15 matches × €40k) | €0 | €10,000 | €10,000 | €10,000 | €30,000 |
+| **Total Q1-Q4** | **€19,350** | **€29,350** | **€29,350** | **€29,350** | **€107,350** |
+
+**Assumptions**: 200 registered SMEs by end of Year 1 (aggressive but achievable with construction-sector networking), 2,500 job ads posted annually, 1,000 boosts/super-likes, 500 verified worker profiles, 15 successful matches leading to permanent contracts.
+
+**Break-even analysis**: With monthly operational costs (server, development, marketing) estimated at €15k/month, break-even reached at approximately €180k annual revenue – projected Year 1 revenue of ~€107k requires additional funding (grants, sponsorship) or Year 2 scaling.
+
+## 5.9. Implementation details (tech stack)
+
+### 5.9.1. Full technology stack
+
+| Component | Technology | Rationale |
+|-----------|-----------|-----------|
+| **Mobile frontend** | React Native (Expo) | Single codebase for iOS/Android; extensive library support for geolocation, camera, push notifications; large developer pool in Latvia |
+| **Backend** | Node.js with TypeScript, Express framework | Fast development, NPM ecosystem for PostgreSQL, Redis, JWT auth; easy to find Latvian Node.js developers |
+| **Database** | PostgreSQL 15 + PostGIS 3.3 | Reliational data integrity; PostGIS for geospatial radius searches natively |
+| **Cache & real-time** | Redis 7 + WebSocket (ws library) | Sub-millisecond swipe state persistence; WebSocket for mutual-match push notifications |
+| **Storage** | Amazon S3 (eu-west-1) / Google Cloud Storage | Scalable object storage for certificate PDFs, profile photos; EU data residency compliance |
+| **AI/ML** | TensorFlow Lite on device + optional Python service | On-device preference learning for privacy & low latency; backend for aggregate analytics |
+| **Messaging** | Firebase Cloud Messaging + Signal Protocol (via `signal-node`) | Push notifications; end-to-end encryption; large-scale delivery infrastructure |
+| **Authentication** | JWT (JSON Web Tokens) + OAuth 2.0 | Standardised auth; integration with Google/GitHub login options for faster onboarding |
+| **Deployments** | Docker + Kubernetes (or Heroku for simplified ops) | Containerised deployment; easy scaling; EU-based hosting for GDPR compliance |
+| **CI/CD** | GitHub Actions | Automated testing, building, deployment on each commit |
+| **Monitoring** | Sentry (error tracking), Prometheus + Grafana (metrics) | Production stability; quick error resolution |
+
+### 5.9.2. Database schema (key tables)
+
+```sql
+-- Users table (inherited by employers and workers via role column)
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) CHECK (role IN ('employer', 'worker', 'admin')),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    gdpr_consent BOOLEAN DEFAULT FALSE,
+    location_consent BOOLEAN DEFAULT FALSE
+);
+
+-- Profiles table (one-to-one with users)
+CREATE TABLE profiles (
+    id UUID PRIMARY KEY REFERENCES users(id),
+    trade_specialisation VARCHAR(100) NOT NULL,
+    years_experience INTEGER,
+    certifications JSONB,  -- JSON array of badge objects
+    location POINT,  -- PostGIS point, nullable for privacy mode
+    desired_pay_min NUMERIC,
+    desired_pay_max NUMERIC,
+    availability VARCHAR(50),
+    rating_average NUMERIC DEFAULT 0,
+    rating_count INTEGER DEFAULT 0,
+    photo_url TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Swipes table
+CREATE TABLE swipes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    candidate_id UUID REFERENCES users(id),
+    direction VARCHAR(10) CHECK (direction IN ('right', 'left', 'up', 'down')),
+    timestamp TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id, candidate_id)
+);
+
+-- Matches table (mutual right-swipes)
+CREATE TABLE matches (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    employer_id UUID REFERENCES users(id),
+    worker_id UUID REFERENCES users(id),
+    matched_at TIMESTAMP DEFAULT NOW(),
+    trial_shift_scheduled BOOLEAN DEFAULT FALSE,
+    trial_shift_date DATE,
+    completed BOOLEAN DEFAULT FALSE,
+    UNIQUE(employer_id, worker_id)
+);
+
+-- Ratings table
+CREATE TABLE ratings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    rater_id UUID REFERENCES users(id),
+    ratee_id UUID REFERENCES users(id),
+    shift_date DATE,
+    rating_value INTEGER CHECK (rating_value BETWEEN 1 AND 5),
+    comment TEXT,
+    related_match_id UUID REFERENCES matches(id),
+    created_at TIMESTAMP DEFAULT NOW(),
+    is_public BOOLEAN DEFAULT TRUE
+);
+
+-- API rate limiting and audit logs
+CREATE TABLE api_logs (
+    id SERIAL PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    endpoint VARCHAR(255),
+    request_method VARCHAR(10),
+    status_code INTEGER,
+    response_time_ms INTEGER,
+    timestamp TIMESTAMP DEFAULT NOW()
+);
+```
+
+### 5.9.3. API endpoints (selected)
+
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `POST /auth/register` | POST | None | Register new user (employer or worker) |
+| `POST /auth/login` | POST | None | Authenticate and receive JWT |
+| `GET /profile/me` | GET | JWT | Retrieve current user's profile |
+| `PUT /profile/me` | PUT | JWT | Update profile (trade, certs, location, preferences) |
+| `GET /feed/current` | GET | JWT | Get next swipe card in feed |
+| `POST /swipe` | POST | JWT | Record swipe direction (right/left/up/down) |
+| `GET /matches` | GET | JWT | List all mutual matches for user |
+| `GET /matches/:id/chat-token` | GET | JWT | Get encrypted chat session token |
+| `POST /ratings` | POST | JWT | Submit rating after trial shift |
+| `GET /boosts/available` | GET | JWT | Check remaining boosts/super-likes |
+| `POST /boosts/purchase` | POST | JWT | Purchase additional boosts |
+| `GET /analytics/dashboard` | GET | JWT (employer only) | View swipe-to-match conversion, time-to-fill charts |
+
+## 5.10. Prototype demonstration
+
+The MVP prototype implements the following core functionality:
+
+1. **User registration & onboarding**: Email/login; GDPR consent collection; location permission request; trade specialization selection from dropdown (carpentry, electrical, masonry, welding, plumbing, painting, roofing)
+2. **Profile creation**: Upload profile photo; enter years of experience; list certifications (manual entry + OCR upload); set desired pay range; availability; willingness to relocate
+3. **Swipe feed**: Continuous card feed showing: trade, 2 skill badges, distance (km), desired pay, rating stars (if ≥3 ratings); swipe right/left/up/down controls
+4. **Mutual match detection**: When both users swipe right → system unlocks chat; push notification sent to both parties
+5. **Basic chat**: End-to-end encrypted messaging with pre-filled tags; message TTL 30 days
+6. **Rating system**: After marking trial shift as "completed", both parties rate each other (1-5 stars); average displays on profile after 3 ratings
+7. **Geolocation filter**: Slider to set max distance (5km–100km); toggle "willing to relocate"
+8. **Admin dashboard (basic)**: View total users, matches per day, rating distribution; export CSV
+
+**Technical limitations of MVP**:
+- No AI recommendation engine (profiles served in random order from nearby radius)
+- No payment integration (premium features disabled)
+- No external system integration (EURES, SDA)
+- Simplified certificate verification (manual entry only)
+- Single-language UI (Latvian/English toggle only)
+
+**Prototype tech stack used**: 
+- Frontend: React Native 0.73 + TypeScript
+- Backend: Node.js 20 + Express + TypeScript
+- Database: PostgreSQL 15 with PostGIS via Supabase free tier
+- Storage: Supabase Storage (S3-compatible)
+- Authentication: Supabase Auth (JWT)
+- Deployment: Vercel (frontend), Supabase (backend + DB)
+
+**Evaluation plan**: 
+- Usability testing with 2 SME employers and 2 skilled workers (Riga area)
+- Metrics: time to first match, swipe completion rate, chat engagement, rating submission rate
+- Feedback collection: SUS (System Usability Scale) questionnaire
+- Iteration: Incorporate top 3 pain points into Version 2 prototype
+
+---  
+
+**End of practical/project chapter** – the above provides complete system design, architecture, and implementation details for a Tinder-style skilled worker matching platform suitable for a bachelor thesis practical component.

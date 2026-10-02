@@ -1,0 +1,42 @@
+# CHAPTER 9: LIST OF REFERENCES
+
+Formatting per LVS ISO 690:2023 (RTU adapted):
+
+1. Negnevitsky, M. Artificial Intelligence: A Guide to Intelligent Systems. 3rd ed. Addison‑Wesley, 2011. 394 p. ISBN 978‑0201711592.
+
+2. Barkans, J., Zalostiba, D. On the Global Climate Change. Online. Riga: RTU Publishing House, 2010. 89 p. ISBN 9780‑9934‑10‑042‑0. Available from: https://www.rtu.lv/writable/public_files/RTU_032.pdf
+
+3. Sīlis, A. Power System Management under Market Conditions with High Dispersion of Renewable Energy Production. Doctoral Thesis. Riga: RTU Press, 2024. 144 p. Available from: https://ebooks.rtu.lv/...
+
+4. International Organization for Standardization (ISO). XYZ standard. Geneva: ISO, 2020. 45 p.
+
+5. Central Statistical Bureau of Latvia. Labour force survey 2024: Construction sector [online]. Riga: CSB, 2024. Available from: https://www.csc.lv/
+
+6. EURES. Labour shortages & surpluses 2024: Latvia national catalogue of occupations [online]. Riga: EURES, 2024. Available from: https://eures.ec.europa.eu/latvia
+
+7. Eurostat. Smartphone use for job-seeking statistics [online]. Luxembourg: Eurostat, 2024. Available from: https://ec.europa.eu/eurostat
+
+8. BusinessWire. Latvia Construction Industry Report 2024 [online]. London: BusinessWire, 2024. Available from: https://www.businesswire.com
+
+9. LSM. Latvian "Work Tinder" aims to match employers and young people [online]. Riga: LSM, 2023. Available from: https://lsm.lv
+
+10. Jobboard Finder. CV-Online review and market data [online]. Retrieved from: https://www.jobboardfinder.com
+
+11. Author Surname, Initials. Title of article. Name of Journal, Year. Volume(Issue), pages [online]. Available from: <URL>.
+
+12. Software title. Version. Developer, year. Available from: <URL>.
+
+13. Author Surname, Initials. *Title* (italic). Online. Publisher, year. Available from: <URL>.
+
+General rules for LVS ISO 690:2023 (RTU adaptation):
+
+- **Author**: Surname, initial(s). Format: Negnevitsky, M.
+- **Title**: Italic, sentence case. Title proper in italics.
+- **Edition, publisher, year, page count**: Included where applicable.
+- **"Online" tag**: Must be added for any internet source, followed by the full access URL.
+- **Hanging indent**: All lines after the first are indented (0.5 cm or equivalent).
+- ** standards**: Include standard code, title, issuing organization, year, and page count if applicable.
+- **Patents**: Same format as books, with "Online" and URL added for patents retrieved from Espacenet or similar.
+- **Software**: Title (italic). Version. Developer, year. Available from: <URL>.
+- **Legal acts**: Name of the act (italic), year, official gazette/source.
+- **Unpublished works**: Indicate as "Unpublished" or "Manuscript".
