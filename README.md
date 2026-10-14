@@ -11,18 +11,20 @@
 - [Running the Application](#running-the-application)
 - [Building for Production](#building-for-production)
 - [Testing](#testing)
+- [Thesis Documentation](#thesis-documentation)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
 ## Overview
-The **Meistermatch Platform** is a web application and prototype platform for data‑driven matchmaking between candidates and job listings. The repository contains the **Next.js** web application (`meistermatch-web`) and platform prototypes (`meistermatch_prototypes`).
+The **Meistermatch Platform** is a thesis‑level research project that explores data‑driven matchmaking between candidates and job listings. The repository contains both the **Next.js** web prototype (`meistermatch-web`) and the accompanying academic material (`thesis_work`).
 
 ## Features
 - **Dynamic job‑matching UI** – swipe‑based interface for candidates to express interest.
 - **Employer dashboard** – create and manage job postings.
 - **AI recommendation engine** – prototype algorithms for ranking matches.
 - **Responsive design** – built with modern CSS and optimized for mobile devices.
+- **Comprehensive thesis** – literature review, methodology, results, and appendices.
 
 ## Tech Stack
 - **Frontend**: Next.js 14 (App Router), TypeScript, React, Tailwind (optional), Vercel for deployment.
@@ -34,12 +36,14 @@ The **Meistermatch Platform** is a web application and prototype platform for da
 ## Repository Structure
 ```
 Meistermatch-platform/
-├─ meistermatch-web/            # Next.js web application (frontend & API routes)
+├─ meistermatch-web/            # Next.js application (frontend & API routes)
 │   ├─ src/                    # Source code (pages, components, styles)
 │   ├─ public/                 # Static assets (icons, images)
 │   ├─ package.json            # Project dependencies
 │   └─ ...
-├─ meistermatch_prototypes/     # Platform prototypes and design assets
+├─ thesis_work/                 # Academic documents, PDFs, LaTeX sources
+│   ├─ Bachelor_Thesis/        # Full thesis manuscript and appendices
+│   └─ Research_papers/        # Supporting literature
 ├─ .gitignore
 └─ README.md                   # This file
 ```
@@ -91,6 +95,13 @@ npm run test:watch  # Watch mode during development
 ```
 Coverage reports are generated under `coverage/`.
 
+## Thesis Documentation
+All thesis‑related files are located in `thesis_work/`. Key documents include:
+- `Bachelor_Thesis/Thesis_Complete_Document.docx` – full manuscript.
+- `Bachelor_Thesis/RTU_Semester_Report.pdf` – PDF version for submission.
+- `Research_papers/` – PDFs of cited literature.
+
+Feel free to explore the LaTeX source (if present) for reproducibility of figures and tables.
 
 ## Contributing
 Contributions are welcome. Please follow these steps:

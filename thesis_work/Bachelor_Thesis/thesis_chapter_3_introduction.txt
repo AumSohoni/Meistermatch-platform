@@ -1,0 +1,42 @@
+# CHAPTER 3: INTRODUCTION
+
+## 3.1. Research problem statement
+
+The Latvian construction and trades sector faces a paradox: despite a vacancy rate of approximately 2.7% in 2023, many positions remain unfilled for months, particularly in skilled craft occupations (carpentry, masonry, welding, electrical work). Simultaneously, qualified skilled workers—especially those not registered on major job boards—struggle to find relevant opportunities. The current job matching ecosystem relies on keyword-based search through PDF-formatted job advertisements, resulting in poor match quality, geographic mismatches, and high transaction costs for small and medium-sized enterprises (SMEs). There is no existing platform that leverages modern mobile interaction models (such as the "swipe" mechanism popularized by dating apps) to address these specific labour-market inefficiencies.
+
+## 3.2. Significance of the study (theoretical + practical contribution)
+
+**Theoretical contribution:** This thesis contributes to the body of knowledge on digital labour matching by adapting the "Tinder-style" mutual-match interaction model from the dating domain to the job recruitment context. It proposes a novel architecture for skill-based, geo-targeted matching that incorporates reputation systems (post-trial ratings) and AI-driven preference learning. The thesis also expands the application of LVS ISO 690:2023 citation practices to include software and digital platform references.
+
+**Practical contribution:** The primary practical output is a functional prototype of a Tinder-style platform for skilled worker matching in Latvia. For employers (particularly SMEs in construction), the platform promises: reduced time-to-fill from months to days, lower advertising costs through a freemium model, and improved candidate quality through verified skill badges and rating systems. For skilled workers, the platform offers: transparent pay information, geographic matching, reputation building through employer ratings, and access to gig/short-term opportunities. The platform also aligns with EU and Latvian government initiatives on digital labour market services (EURES, SDA digital services, Recovery Plan funding).
+
+## 3.3. Scope and limitations
+
+**Scope:**
+- Focus on the Latvian labour market for skilled construction and trades workers
+- Platform designed for mobile-first access (smartphones >80% of job searches, Eurostat 2024)
+- Core features: profile management, geolocation, swipe matching, mutual matches, rating system, secure messaging
+- Prototype implementation covering basic MVP functionality
+- Bibliography formatted per RTU LVS ISO 690:2023 guidelines
+
+**Limitations:**
+- Prototype does not include full AI recommendation engine with machine learning training; basic preference-based suggestions only
+- Does not integrate with external systems (EURES, SDA) in the MVP phase
+- Rating system based on simulated trial shifts; real-world validation required post-launch
+- Geographic coverage limited to users who consent to location sharing
+- Monetisation model based on projected user adoption; actual revenue will depend on market penetration
+
+## 3.4. Structure of the thesis
+
+The thesis is structured according to RTU's bachelor thesis requirements:
+
+1. **Substantiation of topicality** (Chapter 1) – Market analysis, existing platforms, user pain points, rationale for Tinder-style approach
+2. **Goal and tasks** (Chapter 2) – Thesis objective and concrete tasks
+3. **Introduction** (Chapter 3) – Problem statement, significance, scope, thesis structure
+4. **Analytical part / Theoretical chapter** (Chapter 4) – Comprehensive literature review and market analysis
+5. **Practical / Project part** (Chapter 5) – System architecture, design, implementation, prototype
+6. **Summary of research & results** (Chapter 6) – Answers to research questions, main findings
+7. **Author's personal conclusions & lessons learned** (Chapter 7) – Reflection on the thesis process
+8. **Author's achievements** (Chapter 8) – Publications, presentations, etc. (if applicable)
+9. **List of references** (Chapter 9) – LVS ISO 690:2023 formatted
+10. **Appendices** (Chapter 10) – Technical specifications, code excerpts, UI designs, test results

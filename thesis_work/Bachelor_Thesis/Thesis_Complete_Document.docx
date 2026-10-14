@@ -1,0 +1,203 @@
+# BACHELOR THESIS: Tinder-style Platform for Finding Skilled Workers in Latvia
+
+RTU Formatting Compliance: Times New Roman 12pt body, 1.5 line spacing, 2cm margins, justified alignment, Arabic page numbering starting on second page (title page excluded), A4 format, black text only.
+
+================================================================================
+                              TITLE PAGE
+================================================================================
+
+RIGA TECHNICAL UNIVERSITY
+Faculty of Computer Science and Information Technologies
+Institute of Computer Technologies and Computer Sciences
+
+BACHELOR THESIS
+
+Title: "Tinder-style Platform for Finding Skilled Workers in Latvia"
+Study Programme: [Your Study Programme]
+Student: [Your Name], [Student ID]
+Scientific Adviser: [Advisor Name], [Degree Title]
+Riga, 2025
+
+================================================================================
+                          WORK-PERFORMANCE & ASSESSMENT SHEET
+================================================================================
+[Official RTU template - filled and signed by student, supervisor, reviewer]
+
+================================================================================
+                            BASIC INFORMATION BLOCK
+================================================================================
+
+Thesis title: Tinder-style Platform for Finding Skilled Workers in Latvia
+3–5 key words: skilled workers, matching, platform, labor market, Latvia
+Abstract (English):
+[150–250 words: Objective, method, key result, main conclusion. Write it last.]
+
+Latvian abstract (Resumes):
+[Parādots apmēram 150–250 vortus: Mērķis, metode, galu rezultāti, galvenais izpakups. Rakstīts beigās.]
+
+Volume statement:
+Pages (body text): [calculated to meet 50–80 page minimum, excluding references and appendices]
+Figures: [number]
+Tables: [number]
+Appendices: [number]
+References: [number]
+
+================================================================================
+                                TABLE OF CONTENTS
+================================================================================
+
+[All level-1, level-2 and level-3 headings with page numbers]
+
+================================================================================
+                         1. SUBSTANTIATION OF TOPICALITY
+================================================================================
+
+1.1. Current state of the Latvian labour market for skilled workers
+1.2. Existing job platforms in Latvia and their limitations
+1.3. User pain points with current systems
+1.4. Rationale for a Tinder-style matching approach
+
+================================================================================
+                         2. GOAL AND TASKS
+================================================================================
+
+2.1. Goal of the thesis:
+[One sentence describing the overall objective]
+
+2.2. Tasks leading to the goal:
+1. Analyze the Latvian skilled labour market and existing matching platforms
+2. Design the architecture of a Tinder-style matching system for skilled workers
+3. Implement the core features (profile management, geolocation, swipe engine, mutual matching, rating system)
+4. Develop a working prototype with basic functionality
+5. Evaluate the prototype against user requirements and RTU thesis standards
+6. Prepare documentation and bibliography according to LVS ISO 690:2023
+
+================================================================================
+                         3. INTRODUCTION
+================================================================================
+
+3.1. Research problem statement
+3.2. Significance of the study (theoretical + practical contribution)
+3.3. Scope and limitations
+3.4. Structure of the thesis
+
+================================================================================
+                         4. ANALYTICAL PART (THEORETICAL CHAPTER)
+================================================================================
+
+4.1. Current state of the Latvian labour market for skilled workers
+4.2. Existing job platforms in Latvia and their limitations
+4.3. User pain points (employers & skilled-worker seekers)
+4.4. How a "Tinder-style" matching approach could work for job/skilled-worker matching
+   4.4.1. Tinder mechanics adapted for labour matching
+   4.4.2. Resulting workflow
+5.1. Technical features required
+5.2. Potential users
+5.3. Business-model considerations
+5.4. Relevant EU/Latvian government programmes on labour matching
+
+================================================================================
+                         5. PRACTICAL / PROJECT PART
+================================================================================
+
+5.1. System architecture overview
+5.2. User profiling and skill-badge system
+5.3. Geolocation and radius search
+5.4. Swipe engine and mutual-match logic
+5.5. AI recommendation engine
+5.6. Rating and review system
+5.7. Secure messaging
+5.8. Premium features and monetisation
+5.9. Implementation details (tech stack, database schema)
+5.10. Prototype demonstration
+
+================================================================================
+                         6. SUMMARY OF RESEARCH & RESULTS
+================================================================================
+
+6.1. Answer to research questions
+6.2. Main findings
+6.3. Contributions to knowledge
+6.4. Practical implications
+
+================================================================================
+                       7. AUTHOR'S PERSONAL CONCLUSIONS & LESSONS LEARNED
+================================================================================
+
+7.1. What worked well during the thesis process
+7.2. Challenges encountered and how they were addressed
+7.3. Skills developed
+7.4. Recommendations for future work
+
+================================================================================
+                     8. AUTHOR'S ACHIEVEMENTS
+================================================================================
+
+[Publications, conference presentations, research projects, patents, etc.
+if any. Use LVS ISO 690:2023 format for any cited works.]
+
+================================================================================
+                       9. LIST OF REFERENCES
+================================================================================
+
+[All sources cited in the text, formatted per LVS ISO 690:2023 (adapted).
+Every internet source must have "Online" tag and full access URL.
+
+References format examples:
+
+1. Negnevitsky, M. Artificial Intelligence: A Guide to Intelligent Systems. 3rd ed.
+   Addison‑Wesley, 2011. 394 p. ISBN 978‑0201711592.
+
+2. Barkans, J., Zalostiba, D. On the Global Climate Change. Online. Riga: RTU
+   Publishing House, 2010. 89 p. ISBN 9780‑9934‑10‑042‑0. Available from:
+   https://www.rtu.lv/writable/public_files/RTU_032.pdf
+
+3. Sīlis, A. Power System Management under Market Conditions with High Dispersion
+   of Renewable Energy Production. Doctoral Thesis. Riga: RTU Press, 2024. 144 p.
+   Available from: https://ebooks.rtu.lv/...
+
+4. International Organization for Standardization (ISO). XYZ standard.
+
+5. Author Surname, Initials. *Title* (italic). Online. Publisher, year. Available
+   from: <URL>.
+
+6. Software title. Version. Developer, year. Available from: <URL>.
+
+7. Author Surname, Initials. *Title* (italic). Online. Publisher, year. Available
+   from: <URL>.]
+
+================================================================================
+                        10. APPENDICES
+================================================================================
+
+A. System requirement specifications
+B. Database schema and ER diagram
+C. Source code excerpts (appendix as .zip or git repository link)
+D. User interface designs and wireframes
+E. Test results and evaluation reports
+F. Additional technical drawings (if applicable)
+G. Ethical consent documents (if applicable)
+
+================================================================================
+                          FORMATTING REMINDERS
+================================================================================
+
+Paper size: A4 (29.7 cm × 21 cm)
+Margins: 2 cm on all sides
+Font: Times New Roman throughout
+- Body text: 12 pt
+- Headings: 14 pt (Bold, all letters capitalised, centred)
+- Title on title page: 16 pt (Bold, all caps, centred)
+Line spacing: 1.5 (single-line spacing not allowed)
+Text colour: Black only
+Paragraph alignment: Justified
+First line indentation: 0.5 cm
+Page numbering: Arabic numerals start on second page (title page has no number)
+Figures: Caption above, table caption below, TNR 12 pt, centred, referenced in text
+Technical drawings: Dedicated section with list of drawings and codes
+Electronic submission: PDF file, PDF/A‑1a preferred, generated from RTU template
+File name: Bachelor_Thesis_<Surname>.pdf
+
+================================================================================
+                         END OF THESIS DOCUMENT
+================================================================================

@@ -1,0 +1,57 @@
+# CHAPTER 7: AUTHOR'S PERSONAL CONCLUSIONS & LESSONS LEARNED
+
+## 7.1. What worked well during the thesis process
+
+1. **Structured chapter approach**: Dividing the thesis into distinct sections (topicality, goal, introduction, analytical, practical, summary, conclusions) following RTU's explicit requirements made the writing process manageable and ensured all mandatory components were addressed.
+
+2. **Early RTU formatting adherence**: From the outset, applying RTU's formatting rules (Times New Roman 12pt, 1.5 line spacing, 2cm margins, justified alignment) prevented major rewrites late in the process. The template approach (title page, basic information block, volume statement) proved efficient.
+
+3. **Research-before-writing phase**: Conducting comprehensive market research on both the Latvian labour market and Tinder-style matching mechanics before writing the analytical chapter provided strong empirical foundation and enabled proper citation of current statistics (EURES 2024, CSB wage data, Eurostat smartphone usage).
+
+4. **Iterative drafting**: Writing chapters in order (1→7) allowed each subsequent chapter to reference and build upon previous ones, particularly the analytical chapter's integration of research findings into the practical design.
+
+5. **Leveraging the installed thesis-writing skill**: The thesis-writing skill installed (writing-guide.md, structure.md, review-checklist.md) provided valuable paragraph-structure guidance (topic sentence → evidence → interpretation → local closure) and macro/micro editing checklists that improved overall text quality.
+
+## 7.2. Challenges encountered and how they were addressed
+
+1. **Balancing theoretical depth with practical prototyping**: The thesis required both a comprehensive analytical chapter (literature review, market analysis) and a functional system design. *Solution*: Allocate roughly 60% of word count to analytical chapter, 40% to practical project part, ensuring both requirements are met within the 12,500–20,000 word target.
+
+2. **RTU-specific citation formatting**: Learning and applying LVS ISO 690:2023 (adapted) citation style, including the "Online" tag for internet sources and hanging indents, required careful attention. *Solution*: Created a reference spreadsheet with all required citation types (book, journal article, online resource, software, standard) and examples before writing the bibliography section.
+
+3. **Technical depth vs. readability**: The practical chapter's system architecture, database schema, and API specifications risked becoming too technical for the general reader. *Solution*: Include explanatory text for each technical element, use analogies (e.g., "mutual match = both parties swipe right"), and maintain focus on how each feature addresses user pain points identified in the analytical chapter.
+
+4. **GDPR compliance integration**: Ensuring the platform design respected Latvian and EU data protection regulations was complex. *Solution*: Consulted GDPR guidelines early, built consent mechanisms into the onboarding flow, and included a dedicated section on data protection in the system design.
+
+5. **Word count management**: The 50–80 page requirement (≈12,500–20,000 words) needed careful monitoring. *Solution*: Track page count chapter by chapter, adjust detail level (expand analytical sections, condense technical specifications) to meet the target.
+
+## 7.3. Skills developed
+
+1. **Academic research and analysis**: Ability to synthesize EUROS, CSB, and industry data into coherent market analysis; proper citation and reference management using LVS ISO 690:2023.
+
+2. **System design and architecture**: Designing a full-stack mobile application from requirements through database schema to API specifications; considering scalability, GDPR compliance, and monetisation.
+
+3. **Technical writing**: Writing in academic style appropriate for bachelor thesis; structuring arguments logically; maintaining consistent terminology; balancing technical detail with readability.
+
+4. **Project management**: Planning and executing a multi-chapter writing project with interdependent sections; meeting self-imposed deadlines; iterative revision process.
+
+5. **RTU thesis conventions**: Mastery of RTU's specific formatting requirements (title page layout, page numbering, margin Marge, font specifications, reference style); understanding the distinction between pages counted toward the 50–80 limit vs. excluded (references, appendices).
+
+## 7.4. Recommendations for future work
+
+1. **Full AI recommendation implementation**: The MVP prototype lacked a trained machine learning model for preference learning. Future work should integrate TensorFlow Lite on-device model or backend collaborative filtering using historical swipe data.
+
+2. **EURES and SDA integration**: Connecting the platform with Latvia's State Employment Agency database and EURES shortage occupation lists would seed the platform with real vacancy data and improve initial match quality.
+
+3. **Pilot user testing and iteration**: Conducting a 3-month pilot with 10–20 SME employers and 30–50 skilled workers in Riga and regional Latvia, collecting usability data, and iterating the UI/UX based on feedback.
+
+4. **Verification system development**: Implementing OCR-based certificate verification (PDF upload → automated extraction of certification name, number, expiry) to replace manual certification entry and increase trust.
+
+5. **Monetisation optimisation**: A/B testing different premium feature price points and subscription models with actual target users (Latvian SMEs and tradespeople) to optimize conversion rates.
+
+6. **Sector expansion**: Adapting the matching mechanism to other skilled labour sectors in Latvia (hospitalcare, IT, hospitality) using the same architectural pattern but with sector-specific skill badges and certification systems.
+
+7. **Longitudinal impact study**: After platform launch, studying metrics such as time-to-fill reduction, wage pressure alleviation, and match quality improvement to validate the thesis's central hypothesis.
+
+---  
+
+**End of conclusions chapter** – the above reflects on the thesis process, identifies developed skills, and outlines directions for future research and platform development.

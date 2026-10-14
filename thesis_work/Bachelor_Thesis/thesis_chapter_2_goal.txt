@@ -1,0 +1,21 @@
+# CHAPTER 2: GOAL AND TASKS
+
+## 2.1. Goal of the thesis
+
+The goal of this bachelor thesis is to design and prototype a Tinder-style mobile platform for matching skilled workers with employment opportunities in the Latvian construction and trades sector, thereby improving hiring efficiency, reducing time-to-fill for vacancies, and creating a transparent, reputation-based system for both employers and job-seeking tradespeople.
+
+## 2.2. Tasks leading to the goal
+
+1. **Analyze the Latvian skilled labour market and existing matching platforms** – Review Eurostat/EURES data on shortage occupations, examine current job platforms (CV-Online, etc.), and document user pain points from employer and worker perspectives.
+
+2. **Design the architecture of a Tinder-style matching system for skilled workers** – Define system requirements, database schema, core features (profile management, geolocation, swipe engine, mutual matching, rating system), and technology stack suitable for a mobile-first prototype.
+
+3. **Implement the core features of the platform** – Develop profile management with skill-badge system, geolocation and radius search, swipe engine with mutual-match logic, AI recommendation engine (basic collaborative filtering), rating and review system after trial shifts, and secure messaging interface.
+
+4. **Develop a working prototype with basic functionality** – Build a minimum viable product (MVP) using React Native/Flutter for the mobile frontend and Node.js/Go with PostgreSQL for the backend, implementing at least: user registration/login, profile creation with skill badges, swipe mechanism, mutual match detection, and basic chat functionality.
+
+5. **Evaluate the prototype against user requirements and RTU thesis standards** – Conduct usability testing with representative users (2-3 SME employers and 2-3 skilled workers), gather feedback on functionality and usability, and assess the system against the RTU thesis formatting and content requirements.
+
+6. **Prepare documentation and bibliography according to LVS ISO 690:2023** – Create comprehensive system documentation, user manuals, and format all references using the RTU-adapted LVS ISO 690:2023 citation style, ensuring every internet source includes the "Online" tag and full access URL.
+
+7. **Submit the completed thesis document** – Compile all chapters following RTU's formatting requirements (Times New Roman 12pt, 1.5 line spacing, 2cm margins, justified alignment, proper page numbering, technical drawings section if applicable, PDF/A-1a electronic submission).
