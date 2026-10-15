@@ -19,8 +19,7 @@ export interface Tradesperson {
   responseRate: string;
   phone: string;
   email: string;
-  matchScore?: number;
-  matchReasons?: string[];
+  highlights?: string[];
 }
 
 export interface ChatMessage {
@@ -62,8 +61,7 @@ export const TRADESPEOPLE: Tradesperson[] = [
     responseRate: "< 10 min",
     phone: "+371 29 112 345",
     email: "janis.berzins@meistermatch.lv",
-    matchScore: 95,
-    matchReasons: ["High skill match (Wiring & EV)", "Local in Centrs", "Available immediately"],
+    highlights: ["Licensed High-Voltage", "Covers Centrs & Pierīga", "Available This Week"],
   },
   {
     id: "w002",
@@ -86,8 +84,7 @@ export const TRADESPEOPLE: Tradesperson[] = [
     responseRate: "< 15 min",
     phone: "+371 26 443 891",
     email: "aleksandrs.plumbing@meistermatch.lv",
-    matchScore: 90,
-    matchReasons: ["Immediate availability", "High customer satisfaction (4.85★)", "Within budget"],
+    highlights: ["Emergency Unblocking", "Heating & Boilers", "Certified Work"],
   },
   {
     id: "w003",
@@ -110,8 +107,7 @@ export const TRADESPEOPLE: Tradesperson[] = [
     responseRate: "< 30 min",
     phone: "+371 28 887 654",
     email: "maris.welding@meistermatch.lv",
-    matchScore: 88,
-    matchReasons: ["20+ years seasoned experience", "Verified certification", "Steel fabrication expert"],
+    highlights: ["20+ Years Experience", "TIG/MIG Precision", "Structural Steel"],
   },
   {
     id: "w004",
@@ -134,8 +130,7 @@ export const TRADESPEOPLE: Tradesperson[] = [
     responseRate: "< 15 min",
     phone: "+371 20 123 456",
     email: "yves.services@gmail.com",
-    matchScore: 84,
-    matchReasons: ["Competitive pricing (€18/hr)", "Eco-friendly paints", "Immediate start"],
+    highlights: ["Dustless Sanding", "Eco-Friendly Paints", "Interior & Exterior"],
   },
   {
     id: "w005",
@@ -158,8 +153,7 @@ export const TRADESPEOPLE: Tradesperson[] = [
     responseRate: "< 20 min",
     phone: "+371 29 456 789",
     email: "karlis.hvac@meistermatch.lv",
-    matchScore: 92,
-    matchReasons: ["Air Heat Pump certification", "Fast quote response", "Covers Teika & Pieriga"],
+    highlights: ["Heat Pump Certified", "Ventilation Systems", "ALTUM Grant Support"],
   },
   {
     id: "w006",
@@ -182,8 +176,7 @@ export const TRADESPEOPLE: Tradesperson[] = [
     responseRate: "< 25 min",
     phone: "+371 27 334 112",
     email: "dmitrijs.wood@meistermatch.lv",
-    matchScore: 86,
-    matchReasons: ["Custom woodwork specialist", "Affordable cabinetry rate", "High rating"],
+    highlights: ["Custom Cabinetry", "Wooden Terraces", "Flooring & Doors"],
   },
   {
     id: "w007",
@@ -206,8 +199,7 @@ export const TRADESPEOPLE: Tradesperson[] = [
     responseRate: "< 5 min",
     phone: "+371 25 990 123",
     email: "jane.clean@meistermatch.lv",
-    matchScore: 94,
-    matchReasons: ["Instant 5-min response", "Lowest rates in area", "Industrial equipment ready"],
+    highlights: ["Industrial Steamers", "Post-Renovation Clean", "Eco Detergents"],
   },
   {
     id: "w008",
@@ -230,8 +222,7 @@ export const TRADESPEOPLE: Tradesperson[] = [
     responseRate: "< 20 min",
     phone: "+371 22 771 882",
     email: "peteris.zarins@meistermatch.lv",
-    matchScore: 89,
-    matchReasons: ["Jūrmala local expert", "Available this week", "Complete toolset"],
+    highlights: ["Lawn Irrigation", "Natural Stone Paving", "Hedge Shaping"],
   }
 ];
 
@@ -257,7 +248,6 @@ export function saveStoredMatches(matches: MatchRecord[]): void {
 export function recordSwipe(tradespersonId: string, direction: "like" | "pass"): MatchRecord | null {
   if (typeof window === "undefined") return null;
   
-  // Save swipe record
   const rawSwipes = localStorage.getItem(SWIPES_STORAGE_KEY);
   const swipes: Record<string, string> = rawSwipes ? JSON.parse(rawSwipes) : {};
   swipes[tradespersonId] = direction;
@@ -280,17 +270,17 @@ export function recordSwipe(tradespersonId: string, direction: "like" | "pass"):
         {
           id: `msg_welcome_${Date.now()}`,
           sender: "system",
-          text: `You and ${person.name} have matched! You can now agree on pricing, schedule an inspection, or ask questions directly.`,
+          text: `You have connected with ${person.name}. You can now discuss project scope, check availability, or request an estimate.`,
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
         {
           id: `msg_intro_${Date.now()}`,
           sender: "tradesperson",
-          text: `Sveiki! Paldies par interesi. I'm available in ${person.district} starting at €${person.hourly_rate_eur}/hr. How can I help you with your project?`,
+          text: `Labdien! Thank you for getting in touch. I am based in ${person.district} with standard rates at €${person.hourly_rate_eur}/hr. What kind of project do you have in mind?`,
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ],
-      lastMessage: `Sveiki! Paldies par interesi. I'm available in ${person.district}...`,
+      lastMessage: `Labdien! Thank you for getting in touch. I am based in ${person.district}...`,
       lastMessageTime: "Just now",
     };
 

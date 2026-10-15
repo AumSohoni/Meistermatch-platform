@@ -51,9 +51,8 @@ export default function Header() {
             <Link href="/swipe" className="text-gray-600 hover:text-black transition-colors">
               Swipe Mode
             </Link>
-            <Link href="/chat" className="text-gray-600 hover:text-black transition-colors flex items-center gap-1.5">
-              <span>Matches & Chat</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <Link href="/chat" className="text-gray-600 hover:text-black transition-colors">
+              Matches & Chat
             </Link>
           </nav>
         </div>

@@ -12,11 +12,10 @@ import {
   MessageSquare,
   ExternalLink,
   ShieldCheck,
-  Sparkles,
-  Zap,
   Phone,
   Euro,
-  ArrowRight
+  ArrowRight,
+  SlidersHorizontal
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -39,16 +38,16 @@ function SwipeCard({
   onSwipeLeft: () => void;
 }) {
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-250, 250], [-18, 18]);
-  const opacity = useTransform(x, [-250, -120, 0, 120, 250], [0.4, 1, 1, 1, 0.4]);
+  const rotate = useTransform(x, [-220, 220], [-10, 10]);
+  const opacity = useTransform(x, [-220, -100, 0, 100, 220], [0.6, 1, 1, 1, 0.6]);
 
-  const likeOpacity = useTransform(x, [30, 120], [0, 1]);
-  const nopeOpacity = useTransform(x, [-30, -120], [0, 1]);
+  const likeOpacity = useTransform(x, [20, 90], [0, 1]);
+  const nopeOpacity = useTransform(x, [-20, -90], [0, 1]);
 
   const handleDragEnd = (_: any, info: any) => {
-    if (info.offset.x > 100) {
+    if (info.offset.x > 90) {
       onSwipeRight();
-    } else if (info.offset.x < -100) {
+    } else if (info.offset.x < -90) {
       onSwipeLeft();
     }
   };
@@ -65,15 +64,16 @@ function SwipeCard({
       }}
       drag={isTop ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.6}
       onDragEnd={handleDragEnd}
-      animate={{ scale: isTop ? 1 : 0.95, y: isTop ? 0 : 12 }}
-      transition={{ type: "spring", stiffness: 320, damping: 26 }}
-      className={`w-full bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden cursor-grab active:cursor-grabbing select-none ${
-        !isTop ? "pointer-events-none opacity-85" : ""
+      animate={{ scale: isTop ? 1 : 0.97, y: isTop ? 0 : 8 }}
+      transition={{ type: "spring", stiffness: 350, damping: 28 }}
+      className={`w-full bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden select-none cursor-grab active:cursor-grabbing ${
+        !isTop ? "pointer-events-none opacity-80" : ""
       }`}
     >
       {/* Photo Header */}
-      <div className="relative h-60 sm:h-72 w-full bg-gray-900">
+      <div className="relative h-60 sm:h-64 w-full bg-gray-100">
         <img
           src={profile.image}
           alt={profile.name}
@@ -83,82 +83,85 @@ function SwipeCard({
               "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop";
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-        {/* Swipe Indicators */}
+        {/* Swipe Badge Overlays */}
         {isTop && (
           <>
             <motion.div
               style={{ opacity: likeOpacity }}
-              className="absolute top-5 left-5 border-2 border-emerald-400 bg-emerald-500/90 backdrop-blur-md text-white font-extrabold text-xs sm:text-sm px-3.5 py-1.5 rounded-lg rotate-[-8deg] shadow-lg flex items-center gap-1.5"
+              className="absolute top-4 left-4 bg-black text-white font-semibold text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 shadow-md border border-white/20"
             >
-              <Heart className="w-4 h-4 fill-white" /> MATCH
+              <Heart className="w-3.5 h-3.5 fill-white" /> CONNECT
             </motion.div>
             <motion.div
               style={{ opacity: nopeOpacity }}
-              className="absolute top-5 right-5 border-2 border-rose-400 bg-rose-500/90 backdrop-blur-md text-white font-extrabold text-xs sm:text-sm px-3.5 py-1.5 rounded-lg rotate-[8deg] shadow-lg flex items-center gap-1.5"
+              className="absolute top-4 right-4 bg-white text-gray-800 font-semibold text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 shadow-md border border-gray-300"
             >
-              <X className="w-4 h-4" /> SKIP
+              <X className="w-3.5 h-3.5" /> SKIP
             </motion.div>
           </>
         )}
 
-        {/* Top Badges */}
-        <div className="absolute top-4 right-4 flex items-center gap-2">
-          {profile.verified && (
-            <span className="bg-black/75 backdrop-blur-md text-white text-[11px] font-medium px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Verified Meister
+        {/* Verified Badge */}
+        {profile.verified && (
+          <div className="absolute top-4 right-4">
+            <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-[11px] font-semibold px-2.5 py-1 rounded-md flex items-center gap-1 border border-gray-200 shadow-xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-gray-900" /> Verified Meister
             </span>
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Name & Title on Image */}
+        {/* Profile Identity on Image */}
         <div className="absolute bottom-3 left-4 right-4 text-white">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">{profile.name}</h2>
-            <div className="flex items-center gap-1 text-xs font-semibold bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+          <div className="flex items-center justify-between mb-0.5">
+            <h2 className="text-xl font-bold tracking-tight text-white">{profile.name}</h2>
+            <div className="flex items-center gap-1 text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded">
+              <Star className="w-3 h-3 fill-white text-white" />
               <span>{profile.rating}</span>
-              <span className="text-gray-300 font-normal">({profile.reviews})</span>
+              <span className="text-gray-200 font-normal">({profile.reviews})</span>
             </div>
           </div>
-          <p className="text-gray-200 text-xs sm:text-sm font-medium line-clamp-1">{profile.profession}</p>
+          <p className="text-gray-200 text-xs font-medium line-clamp-1">{profile.profession}</p>
         </div>
       </div>
 
       {/* Profile Details */}
       <div className="p-4 sm:p-5 space-y-3.5 bg-white">
-        {/* Match Rationale / Factors */}
-        {profile.matchReasons && profile.matchReasons.length > 0 && (
-          <div className="bg-emerald-50 border border-emerald-100 p-2.5 rounded-xl flex items-start gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
-            <div className="text-xs text-emerald-800">
-              <span className="font-semibold">AI Match Fit ({profile.matchScore}%):</span>{" "}
-              {profile.matchReasons.join(" • ")}
-            </div>
+        {/* Key Highlights */}
+        {profile.highlights && profile.highlights.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {profile.highlights.map((h, i) => (
+              <span
+                key={i}
+                className="text-[11px] font-medium bg-[#fafafa] text-gray-700 px-2.5 py-1 rounded border border-gray-200"
+              >
+                {h}
+              </span>
+            ))}
           </div>
         )}
 
         {/* Location & Pricing Grid */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-3">
-          <div className="bg-[#fafafa] border border-gray-200 p-2.5 sm:p-3 rounded-xl">
+        <div className="grid grid-cols-2 gap-2.5">
+          <div className="bg-[#fafafa] border border-gray-200 p-2.5 rounded-lg">
             <div className="text-[11px] text-gray-500 font-medium flex items-center gap-1 mb-0.5">
-              <MapPin className="w-3.5 h-3.5 text-gray-700" /> District & Area
+              <MapPin className="w-3.5 h-3.5 text-gray-700" /> Location & Area
             </div>
             <div className="text-xs font-semibold text-gray-900 leading-tight">
               {profile.location}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 line-clamp-1">{profile.coverage}</div>
+            <div className="text-[11px] text-gray-500 mt-0.5 truncate">{profile.coverage}</div>
           </div>
 
-          <div className="bg-[#fafafa] border border-gray-200 p-2.5 sm:p-3 rounded-xl">
+          <div className="bg-[#fafafa] border border-gray-200 p-2.5 rounded-lg">
             <div className="text-[11px] text-gray-500 font-medium flex items-center gap-1 mb-0.5">
-              <Euro className="w-3.5 h-3.5 text-gray-700" /> Standard Rate
+              <Euro className="w-3.5 h-3.5 text-gray-700" /> Hourly Rate
             </div>
             <div className="text-xs sm:text-sm font-bold text-gray-900">
               €{profile.hourly_rate_eur} / hr
             </div>
-            <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 line-clamp-1">{profile.estProject}</div>
+            <div className="text-[11px] text-gray-500 mt-0.5 truncate">{profile.estProject}</div>
           </div>
         </div>
 
@@ -168,11 +171,11 @@ function SwipeCard({
         </p>
 
         {/* Skills Pills */}
-        <div className="flex flex-wrap gap-1.5 pt-0.5">
+        <div className="flex flex-wrap gap-1.5">
           {profile.skills.slice(0, 4).map((skill, idx) => (
             <span
               key={idx}
-              className="text-[10px] sm:text-[11px] bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md font-medium"
+              className="text-[10px] sm:text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded font-medium"
             >
               {skill}
             </span>
@@ -181,14 +184,14 @@ function SwipeCard({
 
         {/* Footer Meta */}
         <div className="pt-2.5 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-          <span className="flex items-center gap-1 font-medium text-gray-700 text-[11px] sm:text-xs">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Replies in {profile.responseRate}
+          <span className="flex items-center gap-1 font-medium text-gray-700 text-[11px]">
+            <CheckCircle2 className="w-3.5 h-3.5 text-gray-900" /> Replies in {profile.responseRate}
           </span>
           <Link
             href={`/profile/${profile.id}`}
-            className="text-black font-semibold hover:underline flex items-center gap-1 text-[11px] sm:text-xs"
+            className="text-black font-semibold hover:underline flex items-center gap-1 text-[11px]"
           >
-            View Full Profile <ExternalLink className="w-3 h-3" />
+            View Profile <ExternalLink className="w-3 h-3" />
           </Link>
         </div>
       </div>
@@ -239,29 +242,29 @@ export default function SwipePage() {
   };
 
   return (
-    <div className="min-h-[85vh] py-6 sm:py-8 px-4 flex flex-col items-center justify-between max-w-7xl mx-auto">
-      {/* Top Banner & Quick Navigation */}
-      <div className="w-full max-w-xl flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
+    <div className="min-h-[82vh] py-8 sm:py-10 px-4 flex flex-col items-center justify-between max-w-7xl mx-auto">
+      {/* Header Bar */}
+      <div className="w-full max-w-md flex items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight text-center sm:text-left">
-            Direct Match Deck
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+            Swipe Mode
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5 text-center sm:text-left">
-            Swipe right to match & unlock direct contact • Left to pass
+          <p className="text-xs text-gray-500 mt-0.5">
+            Connect with local tradespeople in Latvia
           </p>
         </div>
         
         <Link
           href="/chat"
-          className="bg-black text-white px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 hover:bg-gray-800 transition-colors shadow-sm"
+          className="bg-white border border-gray-300 text-gray-800 px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 hover:bg-gray-50 transition-colors shadow-xs"
         >
-          <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Active Matches ({activeMatchesCount})</span>
+          <MessageSquare className="w-3.5 h-3.5" />
+          <span>Matches ({activeMatchesCount})</span>
         </Link>
       </div>
 
       {/* Card Stack Container */}
-      <div className="w-full max-w-sm sm:max-w-md min-h-[500px] sm:min-h-[540px] relative flex items-center justify-center grid px-2 sm:px-0">
+      <div className="w-full max-w-sm sm:max-w-md min-h-[490px] relative flex items-center justify-center grid px-2 sm:px-0">
         <AnimatePresence>
           {deck.length > 0 ? (
             deck.slice(0, 2).map((profile, index) => (
@@ -275,29 +278,26 @@ export default function SwipePage() {
             ))
           ) : (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white p-8 rounded-2xl border border-gray-200 text-center max-w-sm w-full space-y-4 shadow-sm"
+              className="bg-[#fafafa] p-8 rounded-xl border border-gray-200 text-center max-w-sm w-full space-y-4 shadow-xs"
             >
-              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
-                ✓
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">Deck Complete!</h3>
+              <h3 className="text-lg font-bold text-gray-900">All Profiles Reviewed</h3>
               <p className="text-xs text-gray-500 leading-relaxed">
-                You have reviewed all available tradespeople for today. Check your matched chats to discuss project details.
+                You have reached the end of the available deck. Check your matched conversations or reload profiles.
               </p>
               <div className="pt-2 space-y-2">
                 <Link
                   href="/chat"
-                  className="w-full bg-[#111] text-white py-2.5 rounded-lg font-semibold text-xs hover:bg-black transition-colors flex items-center justify-center gap-1.5"
+                  className="w-full bg-[#111] text-white py-2.5 rounded-md font-semibold text-xs hover:bg-black transition-colors flex items-center justify-center gap-1.5"
                 >
-                  <MessageSquare className="w-3.5 h-3.5" /> View Matched Chats
+                  <MessageSquare className="w-3.5 h-3.5" /> View Matched Conversations
                 </Link>
                 <button
                   onClick={handleReset}
-                  className="w-full bg-gray-50 text-gray-700 py-2.5 rounded-lg font-semibold text-xs hover:bg-gray-100 transition-colors border border-gray-200"
+                  className="w-full bg-white text-gray-700 py-2.5 rounded-md font-medium text-xs hover:bg-gray-50 transition-colors border border-gray-300"
                 >
-                  Reset Deck
+                  Reload Profiles
                 </button>
               </div>
             </motion.div>
@@ -305,40 +305,40 @@ export default function SwipePage() {
         </AnimatePresence>
       </div>
 
-      {/* Action Controls */}
+      {/* Bottom Controls */}
       {deck.length > 0 && (
-        <div className="flex items-center justify-center gap-4 sm:gap-6 mt-6 sm:mt-8">
+        <div className="flex items-center justify-center gap-5 mt-6 sm:mt-8">
           <button
             onClick={handleUndo}
             disabled={history.length === 0}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white border border-gray-200 text-gray-600 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-colors shadow-sm"
-            title="Undo last swipe"
+            className="w-11 h-11 rounded-full bg-white border border-gray-300 text-gray-600 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-colors shadow-xs"
+            title="Undo"
           >
-            <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
+            <RotateCcw className="w-4 h-4" />
           </button>
 
           <button
             onClick={handleSwipeLeft}
-            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border border-gray-200 text-gray-700 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-md hover:scale-105 active:scale-95"
-            title="Pass (Left)"
+            className="w-14 h-14 rounded-full bg-white border border-gray-300 text-gray-700 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+            title="Pass"
           >
-            <X className="w-6 h-6 sm:w-7 sm:h-7 text-rose-500" />
+            <X className="w-6 h-6" />
           </button>
 
           <button
             onClick={handleSwipeRight}
-            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-900 transition-colors shadow-lg hover:scale-105 active:scale-95"
-            title="Match (Right)"
+            className="w-14 h-14 rounded-full bg-[#111] text-white flex items-center justify-center hover:bg-black transition-colors shadow-sm"
+            title="Connect"
           >
-            <Heart className="w-6 h-6 sm:w-7 sm:h-7 fill-white text-white" />
+            <Heart className="w-6 h-6 fill-white" />
           </button>
 
           <Link
             href={`/profile/${currentProfile?.id}`}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white border border-gray-200 text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+            className="w-11 h-11 rounded-full bg-white border border-gray-300 text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-xs"
             title="Full Details"
           >
-            <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ExternalLink className="w-4 h-4" />
           </Link>
         </div>
       )}
@@ -350,55 +350,38 @@ export default function SwipePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-white rounded-2xl p-6 sm:p-8 max-w-sm w-full text-center border border-gray-200 shadow-2xl relative overflow-hidden"
+              initial={{ scale: 0.96 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.96 }}
+              className="bg-white rounded-xl p-6 sm:p-8 max-w-sm w-full text-center border border-gray-200 shadow-xl"
             >
-              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600" />
-              
-              <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-100 shadow-inner">
-                <Heart className="w-8 h-8 fill-emerald-500 text-emerald-500" />
+              <div className="w-12 h-12 bg-gray-100 text-black rounded-full flex items-center justify-center mx-auto text-xl mb-3 font-bold border border-gray-200">
+                ✓
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
-                It's a Match!
+              <h2 className="text-xl font-bold text-gray-900 mb-1">
+                Connected with {matchedRecord.tradesperson.name}
               </h2>
               <p className="text-xs text-gray-500 mb-5 leading-relaxed">
-                You and <strong className="text-gray-800">{matchedRecord.tradesperson.name}</strong> both expressed interest. Direct messaging is now unlocked!
+                {matchedRecord.tradesperson.name} ({matchedRecord.tradesperson.profession}) is available in {matchedRecord.tradesperson.location} starting at €{matchedRecord.tradesperson.hourly_rate_eur}/hr.
               </p>
 
-              <div className="bg-gray-50 border border-gray-100 p-3 rounded-xl mb-5 text-left text-xs space-y-1.5">
-                <div className="flex items-center justify-between text-gray-700">
-                  <span className="font-medium">Trade:</span>
-                  <span className="capitalize font-semibold">{matchedRecord.tradesperson.trade}</span>
-                </div>
-                <div className="flex items-center justify-between text-gray-700">
-                  <span className="font-medium">Hourly Rate:</span>
-                  <span className="font-semibold">€{matchedRecord.tradesperson.hourly_rate_eur}/hr</span>
-                </div>
-                <div className="flex items-center justify-between text-gray-700">
-                  <span className="font-medium">Location:</span>
-                  <span>{matchedRecord.tradesperson.location}</span>
-                </div>
-              </div>
-
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <Link
                   href={`/chat?matchId=${matchedRecord.id}`}
-                  className="w-full bg-black text-white py-3 px-4 rounded-xl font-semibold text-xs hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shadow-md"
+                  className="w-full bg-[#111] text-white py-2.5 px-4 rounded-md font-semibold text-xs hover:bg-black transition-colors flex items-center justify-center gap-2"
                 >
-                  <MessageSquare className="w-4 h-4" /> Open Chat Room <ArrowRight className="w-3.5 h-3.5" />
+                  <MessageSquare className="w-4 h-4" /> Open Conversation
                 </Link>
 
                 <button
                   onClick={() => setMatchedRecord(null)}
-                  className="w-full bg-white border border-gray-200 text-gray-700 py-2.5 px-4 rounded-xl font-medium text-xs hover:bg-gray-50 transition-colors"
+                  className="w-full bg-white border border-gray-300 text-gray-700 py-2.5 px-4 rounded-md font-medium text-xs hover:bg-gray-50 transition-colors"
                 >
-                  Keep Swiping
+                  Continue Browsing
                 </button>
               </div>
             </motion.div>
