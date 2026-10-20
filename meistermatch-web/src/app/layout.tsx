@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import Header from "./components/Header";
+import ScrollToTop from "./components/ScrollToTop";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,7 +30,8 @@ const LogoFooter = () => (
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-white text-black overflow-x-hidden">
+      <body className="min-h-full flex flex-col bg-white text-black overflow-x-hidden selection:bg-neutral-900 selection:text-white">
+        <ScrollToTop />
         
         {/* Navigation Bar */}
         <Header />
@@ -40,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
 
         {/* Footer */}
-        <footer className="w-full bg-[#1c1c1c] text-white py-12 mt-16">
+        <footer className="w-full bg-[#1c1c1c] text-white py-12 mt-16 border-t border-neutral-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center">
             <div className="mb-6 md:mb-0">
                <LogoFooter />
@@ -55,7 +57,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </footer>
-        
       </body>
     </html>
   );

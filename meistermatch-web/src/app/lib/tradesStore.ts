@@ -1,3 +1,5 @@
+import { supabase } from "@/lib/supabase";
+
 export interface Tradesperson {
   id: string;
   name: string;
@@ -99,104 +101,104 @@ export const TRADESPEOPLE: Tradesperson[] = [
     rating: 4.95,
     reviews: 112,
     image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop",
-    bio: "20+ years expertise in TIG/MIG metal fabrication, steel gate building, stairs, and structural reinforcement. High-precision welding.",
-    skills: ["TIG Welding", "MIG/MAG", "Arc Welding", "Metal Fabrication", "Staircases"],
-    languages: ["Latvian", "Russian"],
+    bio: "MIG/TIG certified welder with EN ISO 9606 certification. Staircases, railings, structural steel beam supports, and custom metalwork.",
+    skills: ["TIG/MIG Welding", "Custom Railings", "Structural Beams", "Stainless Steel", "On-Site Rig"],
+    languages: ["Latvian", "English"],
     availability: "one_to_two_weeks",
     verified: true,
     responseRate: "< 30 min",
-    phone: "+371 28 887 654",
-    email: "maris.welding@meistermatch.lv",
-    highlights: ["20+ Years Experience", "TIG/MIG Precision", "Structural Steel"],
+    phone: "+371 28 334 990",
+    email: "maris.ozols@meistermatch.lv",
+    highlights: ["EN ISO 9606 Certified", "Heavy Metalwork", "Custom Gates"],
   },
   {
     id: "w004",
-    name: "Yves Vergara",
-    profession: "All-Around Interior & Exterior Painter",
-    trade: "painter",
-    district: "Purvciems",
-    location: "Purvciems & Ogre",
-    coverage: "Riga, Salaspils & Ogre",
-    hourly_rate_eur: 18,
+    name: "Kristaps Kalniņš",
+    profession: "Finish Carpenter & Custom Cabinetry Maker",
+    trade: "carpenter",
+    district: "Teika",
+    location: "Teika, Rīga",
+    coverage: "Riga, Sigulda, Ogre",
+    hourly_rate_eur: 22,
     estProject: "€150 - €600 avg. job",
-    rating: 4.8,
-    reviews: 54,
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop",
-    bio: "Specializing in dustless interior painting, wall priming, decorative stucco, and weather-resistant facade coatings.",
-    skills: ["Interior Decorating", "Wall Sanding", "Facade Painting", "Eco Coatings", "Color Match"],
+    rating: 4.92,
+    reviews: 79,
+    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1000&auto=format&fit=crop",
+    bio: "Skilled carpenter focused on custom kitchen furniture assembly, solid oak doors, wood panelling, and hardwood floor installation.",
+    skills: ["Kitchen Assembly", "Hardwood Floors", "Custom Shelving", "Door Hanging", "Restoration"],
     languages: ["Latvian", "English"],
     availability: "immediate",
     verified: true,
-    responseRate: "< 15 min",
-    phone: "+371 20 123 456",
-    email: "yves.services@gmail.com",
-    highlights: ["Dustless Sanding", "Eco-Friendly Paints", "Interior & Exterior"],
+    responseRate: "< 25 min",
+    phone: "+371 27 551 224",
+    email: "kristaps.carpentry@meistermatch.lv",
+    highlights: ["Fine Woodworking", "Custom Furniture", "Certified Carpenter"],
   },
   {
     id: "w005",
-    name: "Kārlis Kalniņš",
-    profession: "HVAC & Heat Pump Installation Specialist",
+    name: "Artūrs Vītols",
+    profession: "HVAC & Heat Pump Technician",
     trade: "hvac",
-    district: "Teika",
-    location: "Teika, Rīga",
-    coverage: "Riga, Sigulda, Cēsis",
-    hourly_rate_eur: 28,
-    estProject: "€350 - €1,800 avg. job",
-    rating: 4.92,
-    reviews: 73,
+    district: "Imanta",
+    location: "Imanta, Rīga",
+    coverage: "Riga, Jūrmala, Jelgava",
+    hourly_rate_eur: 26,
+    estProject: "€180 - €700 avg. job",
+    rating: 4.88,
+    reviews: 51,
     image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop",
-    bio: "Certified Daikin, Mitsubishi, and Panasonic heat pump installer. Air duct ventilation, recuperation units, and climate balancing.",
-    skills: ["Air Heat Pumps", "Recuperators", "Air Conditioning", "Ductwork", "ALTUM Support"],
-    languages: ["Latvian", "English"],
+    bio: "Daikin & Panasonic certified installer. Air-to-air, air-to-water heat pump servicing, ventilation recovery units, and climate maintenance.",
+    skills: ["Heat Pump Install", "AC Servicing", "Ventilation Ducts", "Freon Certification", "Winter Prep"],
+    languages: ["Latvian", "Russian", "English"],
     availability: "immediate",
     verified: true,
-    responseRate: "< 20 min",
-    phone: "+371 29 456 789",
-    email: "karlis.hvac@meistermatch.lv",
-    highlights: ["Heat Pump Certified", "Ventilation Systems", "ALTUM Grant Support"],
+    responseRate: "< 15 min",
+    phone: "+371 29 883 412",
+    email: "arturs.hvac@meistermatch.lv",
+    highlights: ["F-Gas Certified", "Warranty Service", "Immediate Diagnostics"],
   },
   {
     id: "w006",
     name: "Dmitrijs Ivanovs",
-    profession: "Custom Woodworker & Finish Carpenter",
-    trade: "carpenter",
-    district: "Ziepniekkalns",
-    location: "Ziepniekkalns & Mārupe",
-    coverage: "South Riga & Pierīga",
-    hourly_rate_eur: 22,
-    estProject: "€180 - €750 avg. job",
-    rating: 4.78,
-    reviews: 49,
-    image: "https://images.unsplash.com/photo-1540569014015-19a7be504e3a?q=80&w=1000&auto=format&fit=crop",
-    bio: "Custom kitchen cabinetry assembly, oak flooring installation, door framing, and bespoke wooden terrace construction.",
-    skills: ["Cabinetry", "Parquet & Laminate", "Door Hanging", "Terrace Construction", "Framing"],
+    profession: "Interior & Exterior Finishing Painter",
+    trade: "painter",
+    district: "Purvciems",
+    location: "Purvciems, Rīga",
+    coverage: "All Riga Neighborhoods & Pierīga",
+    hourly_rate_eur: 18,
+    estProject: "€80 - €350 avg. job",
+    rating: 4.79,
+    reviews: 95,
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1000&auto=format&fit=crop",
+    bio: "Airless paint spraying, drywall skim-coating (spaktelēšana), wallpaper application, and wood façade staining with premium clean-up.",
+    skills: ["Airless Spraying", "Drywall Smoothing", "Wallpapering", "Exterior Staining", "Color Matching"],
     languages: ["Latvian", "Russian"],
-    availability: "one_to_two_weeks",
+    availability: "immediate",
     verified: true,
-    responseRate: "< 25 min",
-    phone: "+371 27 334 112",
-    email: "dmitrijs.wood@meistermatch.lv",
-    highlights: ["Custom Cabinetry", "Wooden Terraces", "Flooring & Doors"],
+    responseRate: "< 10 min",
+    phone: "+371 26 120 784",
+    email: "dmitrijs.painter@meistermatch.lv",
+    highlights: ["Airless Spray Tech", "Dustless Sanding", "Fast Turnaround"],
   },
   {
     id: "w007",
-    name: "Jane & Crew",
-    profession: "Commercial & Deep Renovation Cleaners",
+    name: "Linda Bērziņa",
+    profession: "Post-Construction & Deep Cleaning Lead",
     trade: "cleaning",
-    district: "Imanta",
-    location: "Imanta, Rīga",
-    coverage: "Entire Riga Metro Area",
+    district: "Ziepniekkalns",
+    location: "Ziepniekkalns, Rīga",
+    coverage: "Riga & Mārupe",
     hourly_rate_eur: 16,
-    estProject: "€80 - €250 avg. job",
-    rating: 4.75,
-    reviews: 42,
+    estProject: "€70 - €220 avg. job",
+    rating: 4.91,
+    reviews: 73,
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop",
-    bio: "Equipped with industrial Kärcher steamers and eco-detergents. Specialized in post-construction dust cleanup and high window washing.",
-    skills: ["Post-Renovation", "Deep Cleaning", "Window Polishing", "Carpet Extraction", "Eco Cleaners"],
-    languages: ["Latvian", "English", "Russian"],
+    bio: "Professional post-construction debris cleanup, window glass scaling, commercial steam deep cleans, and residential turnovers.",
+    skills: ["Post-Build Cleanup", "Window Detailing", "Steam Cleaning", "Floor Polishing", "Odor Removal"],
+    languages: ["Latvian", "English"],
     availability: "immediate",
     verified: true,
-    responseRate: "< 5 min",
+    responseRate: "< 10 min",
     phone: "+371 25 990 123",
     email: "jane.clean@meistermatch.lv",
     highlights: ["Industrial Steamers", "Post-Renovation Clean", "Eco Detergents"],
@@ -245,6 +247,28 @@ export function saveStoredMatches(matches: MatchRecord[]): void {
   localStorage.setItem(MATCHES_STORAGE_KEY, JSON.stringify(matches));
 }
 
+// Background sync to Supabase (non-blocking with graceful fallback)
+async function syncSwipeToSupabase(tradespersonId: string, direction: "like" | "pass") {
+  try {
+    const rawUser = localStorage.getItem("meister_user");
+    const user = rawUser ? JSON.parse(rawUser) : null;
+    const customerEmail = user?.email || "anonymous_guest@meistermatch.lv";
+
+    // Insert swipe activity log or rating into Supabase
+    await supabase.from("swipes").insert([
+      {
+        user_email: customerEmail,
+        tradesperson_id: tradespersonId,
+        direction: direction,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+  } catch (err) {
+    // Graceful offline fallback
+    console.debug("Supabase swipe sync skipped or table awaiting migration:", err);
+  }
+}
+
 export function recordSwipe(tradespersonId: string, direction: "like" | "pass"): MatchRecord | null {
   if (typeof window === "undefined") return null;
   
@@ -252,6 +276,9 @@ export function recordSwipe(tradespersonId: string, direction: "like" | "pass"):
   const swipes: Record<string, string> = rawSwipes ? JSON.parse(rawSwipes) : {};
   swipes[tradespersonId] = direction;
   localStorage.setItem(SWIPES_STORAGE_KEY, JSON.stringify(swipes));
+
+  // Asynchronously sync swipe to Supabase
+  syncSwipeToSupabase(tradespersonId, direction);
 
   if (direction === "like") {
     const person = TRADESPEOPLE.find((p) => p.id === tradespersonId);
@@ -308,6 +335,20 @@ export function addChatMessage(matchId: string, text: string): ChatMessage | nul
   matches[matchIndex].lastMessage = text;
   matches[matchIndex].lastMessageTime = "Just now";
   saveStoredMatches(matches);
+
+  // Optional background sync of messages to Supabase
+  try {
+    supabase.from("messages").insert([
+      {
+        match_id: matchId,
+        sender: "user",
+        text: text,
+        created_at: new Date().toISOString(),
+      },
+    ]).then();
+  } catch (err) {
+    console.debug("Supabase message sync notice:", err);
+  }
 
   return newMsg;
 }

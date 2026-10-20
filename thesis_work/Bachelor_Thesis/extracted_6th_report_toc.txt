@@ -1,0 +1,1340 @@
+=== PAGE 1 ===
+RIGA TECHNICAL UNIVERSITY 
+Faculty of Computer Science, Information Technology and Energy 
+Institute of Applied Computer Systems 
+Aum Sohoni 
+Student of the Academic Bachelor Level Study Program “Computer Systems” 
+Student ID No 241ADB009 
+RECIPROCAL HUMAN-AI JOB 
+MATCHING PLATFORM FOR 
+SKILLED TRADES 
+BACHELOR THESIS 
+6th Semester Report 
+Scientific adviser 
+Lecturer Janis Amolins 
+RIGA 2026 
+ 
+=== PAGE 2 ===
+2 
+ABSTRACT 
+RECIPROCAL MATCHING, ACTIVE LEARNING, SKILLED-TRADES 
+RECRUITMENT, HYBRID HUMAN-AI SYSTEMS, ALGORITHMIC 
+GOVERNANCE, EU AI ACT, INFORMATION RETRIEVAL EVALUATION 
+This report describes the research, design, implementation and early testing of 
+MeisterMatch, a mobile -first reciprocal human -AI recruitment platform for skilled 
+trades (electricians, plumbers, welders, carpenters and HVAC technicians) in Latvia 
+and the Baltic region ( Hazans, 2019; European Labour Authority, 2026). It addresses 
+the mismatch between text-dense job boards and informal hiring: personal referrals 
+remain a common and effective way to fill vacancies in developed labour markets 
+(Hoffman, 2017), but such matches leave neither side with an inspectable, data -
+backed record. 
+MeisterMatch combines a gesture -driven swipe -card interface with a readable 
+multi-factor scoring engine whose factor weights can be adjusted from recruiter 
+feedback. To align with Regulation ( EU) 2024/1689 (European Parliament & 
+Council, 2024a) and Directive ( EU) 2024/2831 (CMS Law, 2024), it keeps a person 
+in the decision loop. Rankings list plain match reasons, and recruiter feedback adjusts 
+the factor weights through uncertainty sampling (Amershi et al., 2019). 
+The prototype has a Python/FastAPI ranker, a Node.js/Express API and a React 
+18/Vite frontend. Chapter 4 verifies that all 13 API endpoints run, that types stay 
+consistent, that passwords are stored as salted scrypt hashes and that session tokens 
+expire, and that the seed data ( 30 workers, 20 jobs) flows end to end. Chapter 5 
+reports an executed controlled experiment, over 80 replicate markets at three market 
+sizes, that compares the active -learning ranker with the fixed -weight baseline on 
+Precision@K and NDCG; it finds a clear gain on the larger markets and no 
+distinguishable gain on the smallest. Voice onboarding, calendar scheduling and 
+messaging bots are out of scope. 
+Report parameters: bachelor thesis progress report; approximately 40 pages 
+including the title page, the list of references and the appendices; 11 tables, 3 figures, 
+36 references. 
+Keywords: Reciprocal Matching, Active Learning, Skilled -Trades Recruitment, 
+Hybrid Human -AI Systems, Algorithmic Governance, EU AI Act, Information 
+Retrieval Evaluation. 
+=== PAGE 3 ===
+3 
+ANOTĀCIJA 
+Šajā bakalaura darba starpatskaitā aprakstīta MeisterMatch izstrāde — savstarpēja 
+(reciprocal) cilvēka un mākslīgā intelekta darba meklēšanas platforma kvalificētiem 
+amatniekiem Latvijā. Platforma apvieno žestu vadītu karšu saskarni ar caurskatāmu, 
+uz noteikumiem balstītu daudzfaktoru vērtēšanas dzinēju, kurā cilvēks paliek lēmumu 
+pieņemšanas ciklā. Atskaite ietver problēmas izklāstu, mērķi un uzdevumus, 
+informācijas avotu analīzi, prototipa praktisko risinājumu un tā verifikācijas sākumu. 
+Atslēgvārdi: savstarpēja saderība, aktīvā apmācība, amatniecības profesijas, cilvēka 
+un MI sadarbība, Eiropas Savienības MI akts. 
+ 
+=== PAGE 4 ===
+4 
+TABLE OF CONTENTS 
+ABSTRACT ................................................................................................................... 2 
+ANOTĀCIJA ................................................................................................................. 3 
+TABLE OF CONTENTS ............................................................................................... 4 
+INTRODUCTION ......................................................................................................... 6 
+1. LABOUR MARKET CHALLENGES AND THESIS OBJECTIVES ..................... 8 
+1.1. Statement of the Problem .................................................................................... 8 
+1.2. Goal of the Thesis ............................................................................................... 9 
+1.3. Tasks of the Thesis ............................................................................................. 9 
+1.4. Scope Boundaries and De-Scoped Features ..................................................... 10 
+1.5. Justification of Topicality ................................................................................. 10 
+1.6. Development Schedule ..................................................................................... 10 
+2. ANALYSIS OF INFORMATION SOURCES (ANALYTICAL PART) ............... 12 
+2.1. Skilled Trades Recruitment Dynamics in Latvia and the Baltics ..................... 12 
+2.2. Hybrid Human-AI Architectures and Algorithmic Matching ........................... 13 
+2.3. Active-Learning Feedback Mechanisms........................................................... 14 
+2.4. Mobile Gesture UX, Reciprocal Matching and Behavioural Dynamics........... 15 
+2.5. EU Legal Compliance, Data Privacy and Algorithmic Governance ................ 15 
+2.6. Related Marketplaces for Skilled-Trades Work ............................................... 16 
+2.7. Comparison of Existing Recruitment Platforms ............................................... 17 
+2.8. Results of the Analytical Part ........................................................................... 17 
+3. PRACTICAL SOLUTION (PRACTICAL PART) ................................................. 19 
+3.1. System Architecture .......................................................................................... 19 
+3.2. Data Model ....................................................................................................... 20 
+3.3. Matching Engine Implementation .................................................................... 21 
+3.4. Authentication and Session Model ................................................................... 22 
+3.5. Key Interaction Sequences ................................................................................ 23 
+3.6. Seed Data and Cold-Start Rationale ................................................................. 24 
+3.7. User Interface Design and Interaction .............................................................. 24 
+3.8. Development Status and Results of the Practical Part ...................................... 25 
+4. PRACTICAL SOLUTION VERIFICATION ......................................................... 26 
+4.1. Verification Approach ...................................................................................... 26 
+4.2. Build and Schema Verification ......................................................................... 26 
+=== PAGE 5 ===
+5 
+4.3. API Endpoint Verification ................................................................................ 27 
+4.4. Frontend and End-to-End Integration Verification ........................................... 27 
+4.5. Verification Results and Test Matrix ................................................................ 27 
+4.6. Security Review, Known Limitations and Planned Hardening ........................ 28 
+5. EMPIRICAL EVALUATION METHODOLOGY AND PRELIMINARY 
+RESULTS .................................................................................................................... 30 
+5.1. Information Retrieval Metrics........................................................................... 30 
+5.2. Baseline Comparison Protocol .......................................................................... 30 
+5.3. Threats to Validity ............................................................................................ 32 
+5.4. Ethical Considerations ...................................................................................... 32 
+5.5. Reproducibility ................................................................................................. 32 
+5.6. Decision Criteria ............................................................................................... 32 
+5.7. Preliminary Controlled Experiment (This Stage) ............................................. 33 
+RESULTS AND CONCLUSIONS ............................................................................. 35 
+LIST OF REFERENCES ............................................................................................. 37 
+APPENDIX: SHARED DATA CONTRACT AND API SURFACE (EXTRACT) ... 40 
+ 
+ 
+=== PAGE 6 ===
+6 
+INTRODUCTION 
+Latvia, and the Baltics more broadly, keep running short of vocational workers, 
+and this has been the case for years. Skilled trades occupations, including certified 
+electricians, plumbers, industrial welders, carpenters and HVAC technicians, are 
+among the hardest roles to fill in construction, manufacturing and municipal 
+infrastructure. Older job sites (such as CV -Online, CV Market and Visidarbi.lv) rely 
+on lengthy text descriptions, complex filter matrices and asynchronous resume 
+uploads. These conventional interfaces serve the skilled trades sector poorly, because 
+trades workers rely on informal peer networks, prioritise immediate local availability 
+and wage transparency, and show low engagement with desktop applicant -tracking 
+systems. 
+AI screening tools promised to help by ranking CVs automatically. On their 
+own, however, they are hard to inspect, they can repeat historical biases and they 
+clash with emerging EU rules. While algorithmic screening can save time, 
+autonomous decision-making brings risks of black -box opacity, reinforced historical 
+bias and regulatory non -compliance ( Rigotti & Fosch-Villaronga, 2024). Under 
+Regulation ( EU) 2024/1689 (the European Union Artificial Intelligence Act), AI 
+applications in recruitment are designated as high -risk systems requiring human 
+oversight, transparency and data governance. 
+This report addresses these challenges by designing, building and checking 
+MeisterMatch, a reciprocal human -AI job -matching platform for skilled -trades 
+recruitment in Latvia (Hazans, 2019; European Labour Authority, 2026). 
+The goal of the bachelor thesis is formulated as follows: to design, implement 
+and verify a prototype of a reciprocal human -AI skilled -trades recruitment platform 
+for the Latvian labour market, featuring a gesture -driven mobile interface, an 
+interpretable multi -factor ranking engine, an active -learning feedback loop, and 
+design consistent with EU human-oversight and transparency requirements for high -
+risk AI applications (European Parliament & Council, 2024a). 
+The tasks of the thesis are: (1) literature analysis, (2) hybrid architecture design, 
+(3) architectural specification, ( 4) prototype implementation, ( 5) active -learning 
+integration, (6) software verification and ( 7) evaluation methodology. Mutual interest 
+is established strictly through dual consent, so contact details are unlocked only when 
+both candidate and employer express interest. A stated trust limitation is that informal 
+=== PAGE 7 ===
+7 
+referral trust is not modelled: “verified trade skills” currently means self -declared 
+skills shown on the card, and referral or employer-endorsement features are future 
+work. The swipe -UI friction argument rests on limited evidence (Iyengar & Lepper, 
+2000; Raghavendra & Chitra, 2025) and would need a short usability test with 
+tradespeople to confirm. 
+The report is organised as follows. The Introduction sets out the topicality, the 
+goal, the tasks and an overview of the chapters. Chapter 2 presents the analytical part: 
+a review of information sources on the Baltic skilled -trades labour market, hybrid 
+human-AI architectures, active-learning methodology, mobile gesture interaction, 
+reciprocal matching and EU legal compliance, closing with the results of the analysis. 
+Chapter 3 presents the practical part: the three -tier prototype, its data model, the 
+matching engine, the user interface and the development status. Chapter 4 covers the 
+verification of the practical solution that has already started. Chapter 5 sets out the 
+empirical evaluation methodology and the results of a preliminary controlled run 
+executed in this stage. The report closes with results and conclusions, a list of 
+references and appendices. 
+The methodology follows a design -science approach. A structured literature 
+review established the requirements and the constraints; a system architecture was 
+then specified and implemented as a working prototype; software verification 
+confirmed build integrity, schema consistency and API reliability; and an evaluation 
+protocol was defined to benchmark the interpretable ranker and its active -learning 
+extension, with a preliminary run executed and reported in Chapter 5. 
+ 
+=== PAGE 8 ===
+8 
+1. LABOUR MARKET CHALLENGES AND THESIS 
+OBJECTIVES 
+1.1. Statement of the Problem 
+The Latvian labour market has a clear supply -demand gap in vocational 
+technical trades. Studies of Latvian emigration ( Hazans, 2019) show that emigration, 
+peaking after the 2008-2009 crisis, removed a large share of the working -age 
+population from manual, craft and technical trades: between 2008 and 2017 about 
+260,000 people left the country, equivalent to 13.5% of the resident population in 
+2017 (OECD, 2019a). This outflow has contributed to persistent shortages in skilled 
+trades that education and VET reforms have so far not offset (Cedefop, 2024). 
+According to official labour-market forecasts published by the Latvian Ministry 
+of Economics ( 2020), Latvia will face a shortage of around 40,000 workers with 
+secondary vocational qualifications in the medium term, alongside a persistent surplus 
+of low-skilled workers. The EURES report of the European Labour Authority ( 2026) 
+lists craft workers, building electricians, welders and plasterers among the widespread 
+shortage occupations in Latvia; roofers and plumbers are not reported as shortage 
+occupations for Latvia, although they are reported as shortages elsewhere in the EU. 
+Traditional online portals only partly resolve this gap, because trades recruitment in 
+Latvia still relies heavily on personal networks and referrals ( Hoffman, 2017). Search 
+frictions of this kind are precisely the inefficiency that electronic labour -market 
+matching is meant to reduce ( Autor, 2001), yet the design of most job boards is ill -
+suited to this segment. 
+The shortage is felt most acutely by small and medium enterprises, which 
+dominate construction, manufacturing and property maintenance in Latvia and rarely 
+have dedicated recruitment staff: vacancy postings are created manually, applications 
+arrive asynchronously, and shortlisting relies on memory and informal reputation 
+rather than structured data. On the worker side, certified tradespeople hold several 
+active skills and move between engagements of varying length, so a browsable profile 
+that states availability and an hourly rate is more useful than a date -stamped 
+application. These observations drive the interface and ranker choices made in 
+Chapter 3. 
+=== PAGE 9 ===
+9 
+1.2. Goal of the Thesis 
+The primary goal of this bachelor thesis is to design, implement and verify a 
+prototype of a reciprocal human -AI skilled -trades recruitment platform for the 
+Latvian labour market featuring a mobile gesture -driven interface, an  interpretable 
+multi-factor ranking engine, an active -learning feedback loop, and design in line with 
+EU human-oversight and transparency requirements for high-risk AI applications. 
+1.3. Tasks of the Thesis 
+To achieve the defined goal, seven specific academic and engineering tasks 
+have been established: 
+1. Literature Analysis: analyse academic literature, official labour -market 
+statistics (EU -LFS, Ministry of Economics) and EU legal frameworks 
+regarding skilled -trades recruitment, hybrid human -AI architectures and 
+active learning. 
+2. Hybrid Architecture Design: investigate hybrid human -AI architectural 
+patterns (Dellermann et al., 2019) in order to design an operational human-
+in-the-loop governance mechanism complying with the EU AI Act. 
+3. Architectural Specification: formulate a multi -tier software architecture 
+separating cross -lingual candidate representations, interpretable ranking 
+logic and real-time state persistence. 
+4. Prototype Implementation: implement a functional web prototype comprising  
+worker and employer card decks, swipe navigation, a rule -based matching 
+engine and mutual-interest messaging. 
+5. Active-Learning Integration: implement an active -learning feedback loop 
+using uncertainty sampling to refine recommendation weights from 
+recruiter interactions, and demonstrate it in a controlled comparison 
+against the fixed weights. 
+6. Software Verification: verify software build integrity, schema contracts and 
+REST API reliability across a deterministic seed dataset of 30 workers and 
+20 job postings. 
+7. Evaluation Methodology: formulate an empirical evaluation methodology 
+(Precision@K, Recall@K, task time) to benchmark the active ranker 
+against a non -learning baseline; a preliminary run of this methodology 
+over replicate markets is reported in Chapter 5. 
+=== PAGE 10 ===
+10 
+1.4. Scope Boundaries and De-Scoped Features 
+A bachelor thesis cannot cover everything, so the scope was kept narrow. The 
+scope covers only reciprocal matching, multi -factor interpretable ranking, active -
+learning feedback and baseline evaluation. Secondary feature extensions, specifically 
+voice onboarding via speech recognition, calendar scheduling integration and 
+automated Telegram notification bots, were excluded from the assessed prototype and 
+identified strictly as future work. A further scope note: the original idea included 
+urgent on -demand dispatch (a client needing a plumber immediately). This thesis 
+instead covers longer-term reciprocal hiring through mutual swiping; urgent two -hour 
+dispatch is explicitly out of scope. 
+1.5. Justification of Topicality 
+The relevance of this work comes from three points: 
+• Macroeconomic urgency: labour and skills shortages are a binding constraint 
+on Latvia’s economy: 90% of firms cited skilled -labour shortages as a 
+barrier to long-term investment in 2025, and the skills -mismatch rate rose 
+to 18.7% in 2024 (European Commission, 2026). The national priority 
+projects outlined in the National Development Plan of Latvia 2021-2027 
+(Cross-Sectoral Coordination Centre, 2020), including housing renovation 
+and the energy transition, are directly bottlenecked by vocational trade 
+shortages. 
+• Regulatory compliance: Regulation ( EU) 2024/1689 (European Parliament & 
+Council, 2024a) designates AI systems used in recruitment as high -risk 
+and mandates human oversight, transparency and data governance. 
+Developing an interpretable, human -in-the-loop platform provides a 
+practical model for regulatory compliance ( Rigotti & Fosch-Villaronga, 
+2024). 
+• User-experience alignment: gesture -driven mobile interfaces lower friction for 
+blue-collar trade workers compared with desktop applicant-tracking forms. 
+1.6. Development Schedule 
+The 19-week schedule for the bachelor thesis project is summarised in Table 1.1. 
+Table 1.1 
+Bachelor Thesis Development Schedule 
+=== PAGE 11 ===
+11 
+Activity Deadline 
+Collect and survey literature sources Week 3 
+Analyse information sources and draft the analytical chapter Week 6 
+Submit the progress report (this document) Week 9 
+Design the system architecture and data model Week 10 
+Implement the matching engine and the active-learning loop Week 11 
+Pre-defence Week 12 
+Conduct the evaluation and write the results chapter Week 15 
+Write the ethical implications and conclusions Week 16 
+Bachelor thesis submission Week 17 (Tuesday) 
+Bachelor thesis defence Week 19 
+ 
+ 
+=== PAGE 12 ===
+12 
+2. ANALYSIS OF INFORMATION SOURCES (ANALYTICAL 
+PART) 
+The analysis of information sources draws on peer -reviewed academic 
+literature, official labour -market statistics, industry reports, technical documentation 
+and EU policy documents. Sources were identified through Google Scholar, IEEE 
+Xplore, the ACM Digital Library, Crossref and official statistical and regulatory 
+portals. The sections below summarise the findings by thematic area: skilled -trades 
+recruitment dynamics in Latvia and the Baltics, hybrid human -AI architectures for 
+matching, active -learning feedback mechanisms, mobile gesture interaction and 
+reciprocal matching, and EU legal compliance and algorithmic governance. The 
+chapter closes with a comparison of existing platforms and the conclusions drawn 
+from the analysis. 
+2.1. Skilled Trades Recruitment Dynamics in Latvia and the Baltics 
+The local picture is based on EU Labour Force Survey and regional labour -
+market studies ( Hazans, 2019; OECD, 2019a; OECD, 2019b). Professional white -
+collar hiring relies on commercial job portals (CV -Online, CV Market), whereas 
+skilled-trades recruitment leans on informal networks, personal recommendations and 
+local classified portals (for example ss.lv / ss.com). OECD evaluations find that 
+registered vacancies account for less than 20% of all hires ( OECD, 2019b), and 
+referral hiring lowers recruiting costs and turnover in developed markets, though it 
+can reinforce homophily ( Hoffman, 2017). In Latvian practice (European Labour 
+Authority, 2026), informal networks dominate trades recruitment because they 
+provide peer trust and verification of practical craftsmanship, which static CV text 
+fails to communicate. 
+The mismatch is structural rather than cyclical. The post-2008 emigration wave 
+removed experienced manual workers faster than the domestic education system 
+could replace them, and vocational enrolment never fully recovered ( Hazans, 2019; 
+OECD, 2019a). Because trades work is location -bound and often requires Latvian or 
+Russian language competency, international replacement talent is only a partial 
+answer, which strengthens the case for better domestic matching rather than 
+additional supply alone (European Labour Authority, 2026). The economic logic of 
+lowering search frictions in such a market is well established: electronic matching 
+=== PAGE 13 ===
+13 
+raises the efficiency of vacancy-candidate contact even when the underlying skills gap 
+persists (Autor, 2001). 
+At the EU level the signals are consistent: the European Labour Authority's 
+shortage report confirms that craft workers, building electricians, welders and 
+plasterers are among the occupations with recognised shortages in Latvia (European 
+Labour Authority, 2026). Because EURES covers only formally reported vacancies, 
+these counts under -state informal hiring, so combining EURES data with labour -
+force-survey evidence and the referral literature gives a more complete picture 
+(Hazans, 2019; OECD, 2019b). Two implications follow: the scarcity of trades labour 
+is a matching problem as much as a supply problem, so improving contact efficiency 
+is an immediately actionable contribution ( Autor, 2001); and a tool for this market 
+must expect many economically active candidates who are not browsing vacancy 
+boards, which motivates the push-oriented card deck proposed here. 
+2.2. Hybrid Human-AI Architectures and Algorithmic Matching 
+The introduction of algorithmic recommendation engines into labour 
+marketplaces affects matching efficiency. In a large -scale field experiment on a 
+digital labour market, Horton (2017) showed that providing employers with 
+algorithmically generated candidate recommendations increased job fill rates for 
+technical vacancies by 20% compared with control groups, without crowding out 
+organic non -recommended applicants. Because the experiment ran in an online 
+freelance market rather than in Latvian skilled -trades recruitment, external validity is 
+limited: such recommendations should be read as complementing, not substituting for, 
+costly manual screening. 
+Fully automated decision systems, however, introduce risks of systematic bias 
+and opacity. Statistical discrimination can arise even from accurate proxy variables, 
+so disparate impact is a structural property of data -driven screening rather than an 
+isolated bug ( Barocas & Selbst, 2016). In digital work settings more broadly, 
+algorithmic control reshapes the relationship between platforms and workers and is 
+contested by the people subject to it ( Kellogg et al., 2020). To mitigate these risks, 
+MeisterMatch adopts the hybrid-intelligence framework formulated by Dellermann et 
+al. ( 2019). Hybrid intelligence combines complementary human cognitive abilities 
+(contextual judgment, ethics, domain intuition) with machine capabilities (rapid 
+pattern recognition, multi -criteria scoring). By embedding recruiters directly in the 
+=== PAGE 14 ===
+14 
+decision loop, the system functions as a supportive recommender rather than an 
+autonomous decision -maker. These interaction principles follow Amershi et al. 
+(2019). 
+Within the hybrid-intelligence view, the division of labour must be explicit. The 
+machine contributes consistency: it applies the same scoring rules to every pair and 
+quantifies each factor. The human contributes context: whether an employer replies, 
+whether a candidate is reachable, whether a borderline score is worth an interview. 
+This keeps the system defensible under the EU AI Act, because the recommendation 
+is an input to a human decision rather than the decision itself (European Parliament & 
+Council, 2024a). Following the interaction guidelines of Amershi et al. ( 2019), each 
+deck card renders the factor bars and plain -language reasons, so a recruiter can agree 
+with, override or refine a ranking - the first step toward the active -learning feedback 
+described in Section 2.3 and evaluated in Section 5.7. 
+2.3. Active-Learning Feedback Mechanisms 
+Active learning here means the following. The build records recruiter likes and 
+passes (like = 1, pass = 0) and fits the ranker’s factor weights to that feedback. The 
+learning layer is a logistic regression on the five factor scores (skill overlap, district 
+match, availability match, pay fit and experience): a weighted sum, squashed by the 
+logistic function, supplies a calibrated probability, and each feedback batch performs 
+one ridge -regularised update of the weights by iteratively reweighted least squares. 
+Sampling then presents unseen pairs whose predicted probability is closest to 0.50 
+(maximum uncertainty). This follows the active -learning paradigm in which the 
+learner queries the most informative points (Settles, 2012). 
+Updates are evaluated on labels the learner never trains on. Each replicate holds 
+out an evaluation share of the market pairs and a validation share of the feedback; the 
+evaluation share scores Precision@K and NDCG, and the validation share triggers a 
+rollback that reverts an update whenever validation NDCG drops more than a fixed 
+margin below its best value. Ridge regularisation toward the starting weights and a 
+bounded weight corridor limit how far one batch can move a factor, and the learner 
+only adjusts factor weights, never the trade filter or the pay and availability rules that 
+encode hard requirements. Active preference elicitation reaches higher accuracy from 
+fewer interactions than passive rating collection ( Elahi et al., 2016; Rubens et al., 
+2015), while multilingual models such as XLM-R (Conneau et al., 2020; Hu et al., 
+=== PAGE 15 ===
+15 
+2020) remain a candidate feature extractor for the final stage only and are not 
+connected to the current ranker. 
+2.4. Mobile Gesture UX, Reciprocal Matching and Behavioural 
+Dynamics 
+Gesture-driven swipe interactions for job matching were operationalised by 
+Raghavendra & Chitra ( 2025) in SwipeRight, where combining swiping with real -
+time state synchronisation shortened screening cycles and increased engagement. 
+Reciprocal models score candidate-job pairs from both sides of the market (Yao et al., 
+2023), and reciprocal recommender systems more generally model mutual rather than 
+one-sided preference ( Palomares et al., 2021). Palomares et al. distinguish score -
+based methods, which compute a utility for each side and combine them, from 
+collaborative and content -based methods. MeisterMatch belongs to the score -based 
+family: jobs-for-worker and workers-for-job scoring are computed independently, and 
+mutual interest comes from the independent like signals rather than a single combined 
+utility, so neither side's score reveals the other's. The platform is a two -sided market 
+with the network effects and cold -start dynamics that platform economics describes 
+(Rochet & Tirole, 2003; Schein et al., 2002). 
+On the behavioural side, large, undifferentiated choice sets can undermine 
+motivation (Iyengar & Lepper, 2000). Waleson (2022) compared fast card -swiping 
+with slow browsing in a mock dating app and found no significant wellbeing effect, 
+so whether curated, pre-ranked decks prevent choice overload in job search remains a 
+hypothesis. Gamified mechanics such as instant match feedback are widely used to 
+motivate candidates ( Obaid et al., 2020). To allow early testing despite network 
+sparsity, the prototype uses deterministic synthetic seed profiles ( 30 workers, 20 
+jobs); this follows the general bootstrapping pattern discussed by Jobtech Alliance 
+(2026), not their recommendation of these exact numbers. 
+2.5. EU Legal Compliance, Data Privacy and Algorithmic 
+Governance 
+Because EU rules apply to hiring AI, the design includes the following controls: 
+• EU AI Act (European Parliament & Council, 2024a): under Regulation ( EU) 
+2024/1689, AI systems used in recruitment and employment are classified 
+=== PAGE 16 ===
+16 
+as high -risk (Annex III). The law mandates risk management, data 
+governance, transparency and human oversight. 
+• Platform Work Directive (European Parliament & Council, 2024b; CMS Law, 
+2024): applies to digital labour platforms and to persons performing 
+platform work; its relevance here depends on whether matchmaking counts 
+as algorithmic management, which is an open legal question. Its limits on 
+processing sensitive personal data are narrower than a general ban. Related 
+GDPR Art. 22 safeguards on solely automated decisions are also 
+considered in the design. 
+• GDPR compliance: in a systematic literature review, Amaral Cejas et al. 
+(2026) note that mobile apps frequently violate data -subject rights (access, 
+erasure, consent withdrawal) . MeisterMatch implements strict data 
+minimisation and user-controlled profile visibility. 
+Human review is not claimed to guarantee fairness, because human recruiters 
+also possess cognitive biases ( Köchling & Wehner, 2020; Raghavan et al., 2020). 
+Human review provides a mechanism to inspect, contest and override 
+recommendations; it does not remove bias on its own. 
+2.6. Related Marketplaces for Skilled-Trades Work 
+A cross-sectional look at existing consumer-facing marketplaces for trades work 
+positions MeisterMatch relative to commercial practice. Platforms such as Hipages 
+(Australia), MyBuilder (United Kingdom) and Thumbtack (United States) are service-
+sourcing marketplaces: a household posts a job, vetted professionals respond with 
+quotes, and the platform mediates trust through reviews and insurance. From a 
+matching-theory viewpoint they are one-sided response markets rather than reciprocal 
+markets, because the household selects among responders while the professional's 
+decision problem (which jobs to pursue, at what price) stays implicit. They are also 
+quote-based and transaction -heavy, which suits one -off household repairs less well 
+than the continuous or project -based staffing relationships that construction and 
+municipal employers in Latvia need (Hazans, 2019). 
+Two-sided recruitment for trade labour, by contrast, resembles the graduate -
+referral matching of Yao et al. (2023), in which both sides swipe and a match requires 
+mutual interest, or the swipe mechanics of Raghavendra & Chitra ( 2025). 
+MeisterMatch occupies this category: a hiring tool for employers who already need 
+=== PAGE 17 ===
+17 
+electricians and welders, not a lead -generation board. The unit of value is a staffing 
+relationship rather than a quotation, so the platform emphasises stated availability, 
+hourly rates and district proximity. To the author's knowledge, no current platform 
+combines all four properties investigated here - reciprocal dual-consent matching, an 
+interpretable multi-factor ranker, an active-learning feedback loop and alignment with 
+EU high-risk AI obligations - which is the gap this work aims to close. 
+2.7. Comparison of Existing Recruitment Platforms 
+To position the prototype, the reviewed platforms and tools are compared in 
+Table 2.1. The comparison is qualitative and was synthesised by the author from the 
+sources reviewed in this chapter rather than from controlled measurement. 
+Table 2.1 
+Qualitative Comparison of Existing Recruitment Platforms and MeisterMatch 
+Platform / tool Primary sector Interface Matching Human 
+oversight 
+CV-Online, CV 
+Market, 
+Visidarbi.lv 
+General / white-
+collar 
+Web forms, 
+keyword filters 
+Manual search Recruiter 
+decides 
+ss.lv / ss.com Classifieds Listing board Manual browsing None 
+LinkedIn Professional / 
+knowledge 
+work 
+Profile + feed Algorithmic 
+ranking 
+Recruiter 
+decides 
+Enterprise AI 
+screening tools 
+Large 
+employers 
+ATS-integrated Automated 
+ranking 
+Limited 
+MeisterMatch (this 
+thesis) 
+Skilled trades Mobile swipe 
+cards 
+Reciprocal + 
+interpretable 
+ranker 
+Human-in-
+the-loop 
+ 
+2.8. Results of the Analytical Part 
+The analytical literature review produced four findings that shaped the system 
+design: 
+1. Informal local dynamics: skilled-trades recruitment in Latvia leans heavily on 
+informal networks and personal referrals ( Hoffman, 2017), which is why 
+this thesis explores a mobile -first, low -friction interface as one possible 
+way to reduce interaction barriers. 
+2. Recommender liquidity: algorithmic recommendations increase job fill rates 
+by 20% for technical vacancies in online labour markets (Horton, 2017), 
+=== PAGE 18 ===
+18 
+but must preserve human oversight under the EU AI Act (European 
+Parliament & Council, 2024a). 
+3. Active feedback efficiency: active learning with uncertainty sampling 
+optimises feature weights under sparse feedback constraints (Settles, 2012; 
+Elahi et al., 2016). 
+4. Gesture UX benefits: choice overload is a documented risk when options are 
+numerous and undifferentiated (Iyengar & Lepper, 2000); whether pre -
+ranked card decks prevent it in job search is a hypothesis to be tested 
+(Waleson, 2022 found no wellbeing effect of swiping speed). 
+The analysis also confirmed a design implication from platform economics: as a 
+two-sided market, MeisterMatch must solve a cold-start problem on both sides, which 
+is why the prototype seeds both worker and job supply with a deterministic dataset 
+(Rochet & Tirole, 2003; Schein et al., 2002). 
+The findings of this chapter translate directly into a requirement set for the prototype. 
+Table 2.2 organises the requirements into functional ones (what the system must do) 
+and non -functional ones (how it must behave), each anchored in the section of the 
+analysis that motivated it. 
+Table 2.2 
+Functional and Non-Functional Requirements Derived from the Analytical Part 
+Type Requirement Origin in the analysis 
+Functional Reciprocal dual-consent matching Referral and two-sided market 
+findings (Sec. 2.4, 2.6) 
+Functional Interpretable per-factor reasons on 
+every recommendation 
+Transparency and hybrid-
+intelligence findings (Sec. 2.2, 
+2.5) 
+Functional Hard trade filtering before scoring Skilled-trades market structure 
+(Sec. 2.1) 
+Functional Swipe-derived like/pass feedback 
+recorded as labels 
+Active-learning design (Sec. 
+2.3) 
+Non-functional Mobile-first gesture interface User-experience findings (Sec. 
+2.4) 
+Non-functional Human-in-the-loop oversight; no 
+autonomous decisions 
+EU AI Act compliance (Sec. 
+2.5) 
+Non-functional Data minimisation and mutual-match-
+only visibility 
+GDPR review (Sec. 2.5) 
+Non-functional Deterministic, reproducible seed 
+market for evaluation 
+Cold-start and evaluation 
+needs (Sec. 2.7, 2.8) 
+ 
+ 
+=== PAGE 19 ===
+19 
+3. PRACTICAL SOLUTION (PRACTICAL PART) 
+3.1. System Architecture 
+MeisterMatch uses a separated three -tier design for easier maintenance, type 
+safety and real -time state synchronisation. Fig. 3.1 illustrates the structural 
+components and data flow across the system. 
+ 
+Fig. 3.1. System Architecture and Active-Learning Feedback Data Flow 
+The frontend (React 18 / Vite, port 5173) renders swipe-based job and worker cards, 
+sends like/pass actions and displays match results. The API layer (Node.js / Express, 
+port 3001) handles authentication, swipe recording, dual -consent match creation and 
+chat messaging. The ML ranker (Python / FastAPI, port 8001) receives candidate-job 
+pairs and returns scored, ranked results with interpretable reasons. A shared JSON 
+data store holds the profiles, swipes, matches and feedback and is the runtime source 
+of truth. Table 3.3 summarises the three services and the shared contract. 
+Table 3.3 
+Services, Technologies and Ports of the MeisterMatch Prototype 
+Service Technology Port Responsibility 
+ML ranker Python / FastAPI (uvicorn) 8001 Multi-factor scoring and 
+interpretable reasons 
+Application API Node.js / Express 3001 Auth, swipes, matches, chat 
+and deck proxies 
+Web client React 18 / Vite 5173 Card decks, score bars and 
+chat UI 
+
+=== PAGE 20 ===
+20 
+Shared contract schema.json (mirrored in 
+contract.ts, models.py) 
+- Single source of truth for 
+types 
+ 
+The services communicate over plain HTTP with JSON. The API proxies 
+ranking requests to the ranker for the two deck routes (jobs -for-worker and workers -
+for-job), so the frontend never talks to the Python service directly. This keeps the 
+internal interface surface small and testable: every inter -service conversation is a 
+single documented JSON request to /rank. 
+3.2. Data Model 
+The data contract is shared between all three services through a single JSON -
+Schema file ( shared/schema.json) that is mirrored in TypeScript (shared/contract.ts) 
+and Python ( shared/models.py). This guarantees type consistency across the 
+TypeScript frontend, the TypeScript API and the Python ML service. The principal 
+entities are summarised in Table 3.1. 
+The contract is strict about identifiers and enumerations. Worker and job 
+identifiers follow the patterns w### and j###; the trade field is restricted to 
+electrician, plumber, welder, carpenter and hvac; languages are limited to lv, ru and 
+en; availability and job start share the same three -state enumeration (immediate, one-
+to-two-weeks or a specific date); and jobs additionally declare a season (summer, 
+winter or all -year) and carry a Latvian description field ( description_lv). The fields 
+consumed by the ranker are the enumerated ones plus the hourly rate band. 
+Table 3.1 
+Principal Data-Model Entities in the MeisterMatch Contract 
+Entity Key fields Purpose 
+Worker id, trade, skills[], experience_years, 
+district, languages[], availability, 
+hourly_rate_eur 
+One skilled-trades professional 
+profile 
+Job id, employer, title, trade, 
+required_skills[], district, 
+pay_min/max, start, season 
+One employer vacancy 
+Swipe actor_type, actor_id, target_type, 
+target_id, direction (like/pass) 
+A single expression of interest 
+Match id, worker_id, job_id Created when both sides like 
+each other 
+Feedback worker_id, job_id, label 
+(relevant/irrelevant), by 
+Label for the active-learning 
+loop 
+User, 
+ChatMessage 
+username, password_hash / text, by, 
+time 
+Authentication and post-match 
+messaging 
+ 
+=== PAGE 21 ===
+21 
+3.3. Matching Engine Implementation 
+The matching engine ( ml/ranker.py) calculates candidate -job relevance using a 
+transparent point-based scoring function over five factors, with a hard trade filter that 
+removes non-matching trades before scoring. The five factors are skill overlap, same -
+district geography, availability, pay compatibility and experience. Fig. 3.2 shows the 
+maximum points each factor can contribute. 
+ 
+Fig. 3.2. Maximum Points Contributed by Each Interpretable Scoring Factor 
+Points are awarded per factor: skill contributes up to 50 points ( 50 times the 
+number of matched required skills divided by the number of required skills; 25 points 
+if the job lists no required skills); same -district geography adds 15; availability adds 
+10 for an exact availability match or 4 if either side is immediate; pay within the 
+employer’s budget adds 15 (or 8 if the rate is within 10%); and experience adds 10 for 
+5 or more years, 5 for at least 1 year and 2 otherwise. The total is capped at 100. 
+There is no language factor in the current build, because job posts do not carry 
+required languages; language profiles exist on worker records only. A limitation is 
+that the geographic factor currently covers ten seeded Riga districts ( Centrs, 
+Purvciems, Agenskalns, Imanta, Jugla, Kengarags, Plavnieki, Sarkandaugava, Teika, 
+Ziepniekkalns); Latgale, Kurzeme and Vidzeme are not yet modelled, which limits 
+the peripheral-region motivation and is left for the remaining work. 
+The geographic factor is a deliberate simplification. Proximity is a binary same-
+district signal: identical districts add 15 points and any different -district pair adds 
+none, so a pair across two adjacent districts scores exactly like a pair on opposite 
+
+=== PAGE 22 ===
+22 
+sides of the city. A finer proximity model would act on a limited signal in the current 
+market, because the executed experiment of Section 5.7 recovers a district sensitivity 
+in the lower half of the five factors, below availability and pay; such a model is left to 
+future work. 
+Worked example. For an electrician in Purvciems with 3 years of experience, 
+availability in one -to-two weeks and a rate of 20 EUR/h, matched against a Centrs 
+electrician job requiring Wiring, HVAC and PLC, starting immediately and paying 
+16-21 EUR/h, the factor points are: skill overlap 1/3 × 50 = 17, same district 0, 
+availability + 4, pay + 15 and experience + 5, giving a total of 41. This illustrative 
+calculation follows the documented rules exactly. Table 3.2 shows the same 
+calculation row by row. 
+Table 3.2 
+Worked Example of the Interpretable Scoring Rules for One Candidate-Job Pair 
+Factor Rule applied Max Scored Reason shown on the 
+card 
+Skill overlap 50 × matched / required (25 
+if none) 
+50 17 Partial skills match 
+(Wiring) 
+Same district +15 if worker and job share 
+a district 
+15 0 No same-district bonus 
+Availability +10 if equal, +4 if either 
+side is immediate 
+10 4 Availability partly overlaps 
+job start 
+Pay fit +15 within budget, +8 close 
+to budget 
+15 15 Pays the candidate’s rate 
+(up to 21 EUR/h) 
+Experience +10 for 5+ years, +5 for 1+, 
++2 otherwise 
+10 5 Some experience (3 yrs) 
+Total Sum of factor points, capped 
+at 100 
+100 41 Composite score 
+ 
+The engine outputs explicit, human -readable match reasons for every scored 
+pair (for example “Partial skills match (Wiring)” or “Located in same district 
+(Centrs)”), so the result stays open to inspection. Weights start as fixed constants in 
+the current build; the active -learning layer described in Section 2.3 and evaluated in 
+Section 5.7 adjusts these weights from recruiter feedback. 
+3.4. Authentication and Session Model 
+Authentication follows a token -based design with hashed credentials and 
+expiring sessions. The API exposes four auth routes: register, login, logout and a 
+current-user route. On register, the username and password are validated (the 
+username must be at least three characters), the password is stored as a salted scrypt 
+=== PAGE 23 ===
+23 
+hash (16-byte salt, 32-byte key, via node:crypto) rather than in plaintext, a user record 
+is appended to the shared store and a bearer token is returned to the client. Login 
+verifies the submitted password against the stored hash and issues a 192-bit random 
+token with a 24-hour expiry; tokens are held in an in -memory session table, and 
+expired tokens are rejected and pruned on use. The current -user route returns the 
+current username when the request carries a valid, unexpired token. Logout deletes 
+the token from the session table. Every route except /health, register and login 
+requires the Authorization: Bearer <token> header, and requests without a valid token 
+receive a 401 response. The web client stores the token obtained at login and attaches 
+it to all subsequent API calls. Records created by earlier builds that stored plaintext 
+passwords are upgraded to a scrypt hash on first successful login. The remaining 
+security limitations of this prototype are reviewed in Chapter 4. 
+3.5. Key Interaction Sequences 
+The core usage flows are best described as short sequences of API calls rather 
+than as screens: 
+1. Worker browsing: the worker logs in, requests the ranked job deck ( GET 
+/api/deck/worker/w001) and swipes right or left on each card; every swipe 
+records a like or a pass for that worker-job pair (POST /api/swipes). 
+2. Employer browsing: the employer logs in, requests the ranked worker deck 
+(GET /api/deck/job/j001) and evaluates candidate cards against the score 
+bars and reason lists. 
+3. Mutual match: when the same worker -job pair has both a worker like and an 
+employer like and no match exists yet, the swipe handler creates a Match 
+record and returns it in the response, so the interface can immediately 
+show the match banner and unlock the chat for both sides. 
+4. Post-match messaging: with the match id, either side lists ( GET 
+/api/chats/:matchId) or sends ( POST /api/chats/:matchId) messages; each 
+message carries the sender, the text and a server timestamp. 
+The dual-consent rule is enforced in exactly one place, the swipe handler, which 
+checks that both like records exist before creating a match and refuses to duplicate an 
+existing match. Contact details are not part of either profile type, so no private 
+information changes hands before mutual interest has been established. 
+=== PAGE 24 ===
+24 
+3.6. Seed Data and Cold-Start Rationale 
+Two-sided markets face a chicken -and-egg problem at launch: employers see 
+little value without candidates, and candidates see little value without jobs ( Rochet & 
+Tirole, 2003; Schein et al., 2002). The prototype addresses this for development and 
+evaluation with a deterministic, synthetic seed set rather than scraped or crowd -
+sourced data. The seed contains 30 worker profiles and 20 job postings spread across 
+the five trades and the ten Riga districts used by the prototype, with realistic ranges 
+for experience (a few years up to over twenty), hourly rates and availability states. 
+Worker profiles include a trade, a skill list, experience, a district, language tags ( lv, 
+ru, en), availability and an hourly rate. Job postings include an employer, a title, 
+required skills, a district, a pay band, a start state and a season. Because the seed is 
+deterministic and versioned, every development run and every evaluation run 
+observes the same market state, which makes the ranker output reproducible. The 
+choice of 30 workers and 20 jobs balances breadth and audibility: the trades and 
+districts are each well represented and the pool is small enough to inspect profile by 
+profile. A market this small caps how much feedback a run can collect, so the 
+controlled experiment of Chapter 5 does not rely on the pinned seed alone; it re -
+generates the market structure under many replicate seeds at three sizes and reports 
+intervals across markets rather than single-seed point estimates. 
+3.7. User Interface Design and Interaction 
+The web frontend provides a card -swiping interface. Workers view pre -ranked 
+job cards displaying employer details, hourly rates, required skills and score 
+breakdown bars. Employers view candidate cards displaying declared trade skills, 
+years of experience and proximity. Swiping right records a like; if both parties 
+express mutual interest, the API instantly creates a match state and unlocks direct 
+messaging. The interface uses a dark theme with glassmorphism elements, score bars 
+and reason lists for each recommendation. Authentication is implemented with token -
+based sessions: users register or log in, receive a bearer token and include it in 
+subsequent API requests. 
+The interface is intentionally minimal. The dark theme reduces glare in the low -
+light conditions in which tradespeople often plan their day, the score bars encode the 
+interpretable factors in rank order, and the reason lists restate the ranker's plain -
+=== PAGE 25 ===
+25 
+language output. The layout is a single -column deck with a thumb -reachable action 
+zone, following the mobile-first constraint established earlier. 
+3.8. Development Status and Results of the Practical Part 
+The current prototype is implemented and verified to the following extent: a 
+rule-based multi -factor ranker, swipe decks, dual -consent matching, chat, scrypt 
+password hashing with expiring sessions, and seed data of 30 workers and 20 jobs. 
+The active -learning weight updater with uncertainty sampling and the controlled 
+baseline comparison have also been implemented and executed, and are reported in 
+Chapter 5. Future work beyond this thesis includes voice onboarding, calendar 
+scheduling, Telegram notifications and a travel -time-aware proximity factor. By the 
+end of the current stage the prototype included: 
+1. schema contracts: a shared data contract and JSON -Schema verification 
+(shared/schema.json); 
+2. seed dataset: a deterministic seed dataset of 30 worker profiles and 20 job 
+postings; 
+3. ML ranker service: a FastAPI ranker with multi -factor scoring and 
+interpretable reasons; 
+4. REST API backend: an Express API handling auth, swipes, dual -consent 
+match logic and chat; 
+5. React web app: a React/Vite frontend delivering gesture cards, score 
+visualisation and chat UI. 
+The three services are launched together by start-all.ps1, which starts the Python 
+ranker on port 8001 and then starts the web development server on port 5173 together 
+with the API, opening the browser automatically. The Express API also serves the 
+built frontend from web/dist when a production build exists, so the end -to-end 
+demonstration runs identically from either the development or the production build. 
+ 
+=== PAGE 26 ===
+26 
+4. PRACTICAL SOLUTION VERIFICATION 
+4.1. Verification Approach 
+Verification in this chapter only checks that the software runs (builds, schemas, 
+API routes and end -to-end startup). It does not measure ranking quality. Ranking 
+quality against a non-learning baseline ( Precision@K, Recall@K, match success and 
+task time) is the separate evaluation reported in Chapter 5. Verification was 
+performed through automated build checks, API endpoint testing and manual 
+inspection, with the goal of confirming that each service starts correctly, that the API 
+endpoints respond with valid data and that the frontend renders without errors. 
+Evidence for every check listed in this chapter was captured as console output 
+during the session in which the services were started with start-all.ps1 and exercised 
+with curl and the browser. The word “verified” therefore means observed in this 
+environment, not guaranteed by a test suite; the automated suite is part of the planned 
+hardening described at the end of the chapter. 
+4.2. Build and Schema Verification 
+• TypeScript typechecking: ran “ npm run typecheck” in the api/ and web/ 
+directories without errors. 
+• Frontend asset build: ran “ npm run build” in web/, producing production files 
+in web/dist/. 
+• Schema consistency: confirmed that shared/schema.json correctly generates the 
+TypeScript interfaces ( contract.ts) and the Python Pydantic models 
+(models.py). 
+Table 4.3 lists each check together with the command used to run it and the outcome 
+observed during the verification session. The environment is a Windows development 
+machine running the services through PowerShell: the ranker runs from a local 
+Python virtual environment under uvicorn, the API and web client run through npm 
+scripts, and start-all.ps1 orchestrates all three. 
+Table 4.3 
+Verification Checks Performed in This Stage 
+Check Command Observed outcome 
+TypeScript typecheck (api/) npm run typecheck (api/) No errors 
+TypeScript typecheck (web/) npm run typecheck (web/) No errors 
+Frontend production build npm run build (web/) Bundle written to 
+=== PAGE 27 ===
+27 
+web/dist/ 
+Schema mirror consistency contract.ts and models.py 
+generated from 
+shared/schema.json 
+Field names and 
+enumeration values 
+identical 
+Ranker startup Start ranker on port 8001 
+(uvicorn) 
+Service up on :8001 
+API startup npm run dev (api/) Service up on :3001 
+End-to-end startup start-all.ps1 All three services run; 
+browser opens 
+ 
+4.3. API Endpoint Verification 
+The 13 core REST API routes were verified using automated curl scripts. Table 
+4.1 summarises the verification results. 
+Table 4.1 
+Verified REST API Endpoints and Functional Status 
+# Method and route Function 
+1 GET /health Service liveness probe 
+2 POST /api/auth/register Create a user and return a token 
+3 POST /api/auth/login Authenticate and return a token 
+4 GET current-user route Return the authenticated user 
+5 POST /api/auth/logout Invalidate the session token 
+6 GET /api/workers Return all 30 worker profiles 
+7 GET /api/jobs Return all 20 job postings 
+8 GET /api/deck/worker/:id Ranked job cards for one worker 
+9 GET /api/deck/job/:id Ranked worker cards for one job 
+10 POST /api/swipes Record a swipe and create a mutual match 
+11 GET /api/matches Return active matches 
+12 GET /api/chats/:matchId Return messages for a match 
+13 POST /api/chats/:matchId Send a message for a match 
+ 
+4.4. Frontend and End-to-End Integration Verification 
+End-to-end orchestration was verified using the start-all.ps1 script, which 
+started the FastAPI ranker (port 8001), the Express API (port 3001) and the Vite 
+frontend (port 5173). Verification confirmed session persistence, card rendering, real -
+time mutual-match banner triggers upon reciprocal swiping, and instant chat message 
+delivery. The browser opens automatically at http://127.0.0.1:5173. 
+4.5. Verification Results and Test Matrix 
+The checks performed so far and the planned hardening cases are summarised in 
+Table 4.2. 
+=== PAGE 28 ===
+28 
+Table 4.2 
+Verification Test Matrix (Completed and Planned) 
+Area Check performed Result Remaining (planned) 
+Build Typecheck api/ and web/ Pass CI gate 
+Build Production build of web/ Pass Automated regression 
+Schema contract.ts and models.py from 
+schema.json 
+Consistent Schema change tests 
+API (auth, 
+incl. 
+negative) 
+13 routes; 401 on missing, 
+wrong or expired token; 409 on 
+duplicate 
+Pass 400 invalid-body and 
+invalid-match cases 
+End-to-end start-all.ps1 brings up all 
+services 
+Pass pytest + supertest suite 
+Ranker Deterministic on the seed set Observed Unit tests, empty-skill 
+edge cases 
+ 
+Interpretation of the verification evidence. The accumulated checks support the 
+claim, restated in the thesis goal, that a working prototype exists and behaves as 
+specified by the schema. The two build checks pass without type  errors, so the shared 
+contract is respected by both the TypeScript client stack and the Python ranking 
+service, and because contract.ts and models.py are both generated from 
+shared/schema.json, a field added in one place cannot silently diverge from the other. 
+The auth negative cases, the deterministic ranker behaviour on the seed set, and the 
+end-to-end orchestration together demonstrate the full loop that the evaluation of 
+Chapter 5 exercises: register, log in, receive a ranked deck, swipe, and observe mutual 
+match and chat. What the evidence does not establish is any claim about match 
+quality or user satisfaction; those are delegated to the controlled comparison of 
+Chapter 5. 
+4.6. Security Review, Known Limitations and Planned Hardening 
+Security review of the current build. The two items flagged in review, plaintext 
+password storage and missing session expiry, are now handled: passwords are 
+persisted as salted scrypt hashes and session tokens carry a 24-hour expiry enforced 
+on every authenticated request  (Section 3.4). The remaining items stay on the 
+hardening list: the API enables any origin, which must be restricted to the deployed 
+frontend origin, and the shared JSON store has no concurrency control, so 
+simultaneous writes could race. Neither affects the local evaluation. 
+The verification is a started activity, not a complete test cycle. Beyond the 
+happy-path curl calls, the authentication negative cases were executed in this stage: 
+=== PAGE 29 ===
+29 
+401 without a token, 401 for a wrong password, 401 for an expired token, and 409 for 
+duplicate registration. Planned hardening includes invalid -body ( 400) and invalid -
+match cases, ranker unit tests, and an automated pytest and supertest suite. Known 
+limits: no store concurrency control; an open CORS policy; and mutual -match-only 
+profile visibility. 
+ 
+=== PAGE 30 ===
+30 
+5. EMPIRICAL EVALUATION METHODOLOGY AND 
+PRELIMINARY RESULTS 
+Chapter 4 covered software checks (verification). Chapter 5 is the separate 
+evaluation: the protocol for testing whether the active ranker beats a fixed -weight 
+baseline, and the results of a preliminary run of that protocol, executed in this stage on 
+synthetic markets. 
+5.1. Information Retrieval Metrics 
+The evaluation framework uses four metrics: 
+1. Precision@K: the share of relevant candidates within the top K recommended 
+cards (K = 3, 5, 10). 
+2. Recall@K: the share of total relevant candidate profiles successfully 
+presented in the top card decks. 
+3. Match success rate: the percentage of candidate -job swipes that result in 
+mutual-interest matches. 
+4. Recruiter task completion time: the time required, in seconds, for a recruiter to 
+shortlist three qualified candidates. 
+Table 5.1 summarises the metric definitions and the way each value will be reported. 
+Table 5.1 
+Evaluation Metric Definitions used in the Study 
+Metric Definition Reported value 
+Precision@K Share of relevant items within the top K = 
+3, 5, 10 recommendations 
+Mean over random 
+seeds 
+Recall@K Share of all relevant items shown in the 
+top K decks 
+Mean over random 
+seeds 
+Match success rate Share of liked candidate-job pairs that 
+become mutual matches 
+Percentage 
+Task completion 
+time 
+Seconds needed to shortlist three qualified 
+candidates 
+Median and 
+interquartile range 
+NDCG@K Rank-aware gain over truncation K Mean over random 
+seeds 
+MRR Inverse rank of the first relevant 
+recommendation 
+Mean over random 
+seeds 
+ 
+5.2. Baseline Comparison Protocol 
+The active -learning ranker will be compared against a static fixed -weight 
+baseline at feedback checkpoints (T = 0, 10, 25, 50, 75, 100 and 150 labelled pairs), 
+=== PAGE 31 ===
+31 
+stated as H0 (no difference) versus H1 (active learning improves Precision@K and 
+reduces task time). Ground -truth relevance labels are assigned by fixed rules 
+documented in the test protocol (skill overlap ≥ 2 and pay gap ≤ 20% and availability 
+matches); because the seed data is synthetic, the generator parameters will be 
+published so that circularity can be inspected. Recruiters are simulated rule -following 
+agents with 10% label noise unless real participants are recruited (target n = 5-8); 
+results will be reported over multiple random seeds with confidence intervals. The 
+metric set adds a rank -aware measure ( NDCG@K, plus MRR). A small bias audit is 
+planned: score disparity across a synthetic protected attribute (for example region) 
+before and after feedback. 
+Data collection follows a pre -registered protocol. Each simulated recruiter run 
+records, at every feedback checkpoint (T = 0, 10, 25, 50, 75, 100 and 150 labelled 
+pairs), the full ranking produced by each ranker, the labels that the rule-based ground 
+truth assigned, and the resulting metric values. The raw recorded rankings, not the 
+aggregates, are archived so that any disagreement between a reported number and the 
+raw output can be audited. If real participants are available (target n = 5-8), they 
+repeat the same protocol in a supervised session, with task time measured from the 
+first swipe until the participant confirms three shortlisted candidates. All runs are 
+executed over multiple random seeds and reported with confidence intervals rather 
+than point estimates. 
+Analysis plan. The primary comparison is the active -learning ranker versus the 
+fixed-weight baseline at each checkpoint. Precision@K and Recall@K are compared 
+as means with bootstrap 95% confidence intervals over seeds. The median task 
+completion time is compared with a paired sign test, because completion times are 
+typically right -skewed. Match success, NDCG@K and MRR are reported 
+descriptively in the same tables as the primary metrics. A difference is considered 
+material only if it is both statistically distinguishable and of practical size (at least five 
+percentage points in Precision@K), so that small but statistically significant effects on 
+a synthetic market are not over-interpreted. 
+Relation to the seed market. The evaluation consumes the deterministic seed 
+market described in Section 3.6 (30 workers, 20 jobs, 10 districts). The layout is 
+advantageous for the study: the trade strata are small enough that each stratum can be 
+observed within a single run, so Precision@K can be computed per trade and 
+averaged rather than over the whole pool. The same generator that produced 
+=== PAGE 32 ===
+32 
+w001..w030 will be re-run under fresh seeds to produce the replicate markets used for 
+bootstrap confidence intervals, while the pinned seed in the prototype branch remains 
+fixed for the reproducibility of the qualitative walkthroughs in Chapter 4. 
+5.3. Threats to Validity 
+Three threats are acknowledged. Internal validity: relevance labels are generated 
+by rules, so the ranker could be rewarded for reproducing those rules; publishing the 
+generator and using held -out seeds mitigates but does not remove this. External 
+validity: the seed data is synthetic and small, so results demonstrate technical 
+feasibility and interaction behaviour rather than labour -market outcomes. Construct 
+validity: engagement and match success are proxies for hiring quality and must be 
+reported as such. 
+5.4. Ethical Considerations 
+The study touches only synthetic data and voluntarily provided participant data. 
+Participant data will be collected with informed consent, stored locally, and reported 
+anonymously. The bias audit is included not as a formality but because the analytical 
+chapter identified statistical discrimination as a structural risk of data -driven 
+screening (Barocas & Selbst, 2016); its result will be reported regardless of whether it 
+favours the proposed system. No experimental condition is designed to deceive 
+participants, and the human -in-the-loop property is preserved in every test scenario, 
+so no decision that a participant sees is produced autonomously. 
+5.5. Reproducibility 
+The evaluation is reproducible by design. The seed generator, the ranking code 
+and the evaluation scripts are version -controlled together with the thesis, the seed 
+market is deterministic (Section 3.6), and every recorded run logs the exact inputs and 
+outputs; reports state the software versions and random seeds used. Any reviewer can 
+therefore rerun the comparison locally without external services. 
+5.6. Decision Criteria 
+The outcome feeds a go/no-go decision for the final thesis rather than a pass or 
+fail for the semester's work. The directional expectation, argued in Section 2.3, is that 
+the feedback -updated weights outperform the fixed weights on held -out relevance 
+judgements, with the improvement concentrated in the first few checkpoints. If the 
+=== PAGE 33 ===
+33 
+active ranker improves Precision@K by at least five percentage points without a 
+recall loss beyond one point, the final thesis presents the active -learning result as the 
+core contribution; if no stable improvement is found, the thesis becomes a rigorous 
+negative result and presents the interpretable fixed -weight system as the contribution. 
+Under both branches the deliverables of this semester - the prototype, the seed market 
+and the evaluation harness - remain valid. 
+5.7. Preliminary Controlled Experiment (This Stage) 
+The protocol above was executed in this stage on synthetic markets, without 
+real participants. Each replicate draws a fresh market with the structure of the seed set 
+(Section 3.6) under a new random seed, splits same -trade candidate-job pairs into a 
+training pool and a 40% held -out evaluation set, and runs three systems over the 
+checkpoints T = 0, 10, 25, 50, 75, 100 and 150: the fixed Phase-1 weights, a ridge -
+regularised active learner with validation rollback ( al_safe) and an unregularised 
+learner without rollback (al_raw). Labels come from hidden market weights (skill 24, 
+district 6, availability 40, pay 34, experience 4) with 10% noise, so the simulated 
+recruiter values availability and pay above the fixed baseline that weights skill most 
+heavily; the run uses 80 replicates at three market sizes ( 30 / 20, 120 / 80 and 300 / 
+150). Figure 5.1 shows the mean P@2 learning curve on 120 / 80 (panel a) and the 
+final-budget P@2 gain by market size (panel b): the fixed baseline is flat at 0.881, 
+while the regularised learner rises monotonically to 0.950 and is above the baseline 
+interval after ten labels, and the unregularised control is unstable, dropping below the 
+baseline at the first checkpoint. 
+=== PAGE 34 ===
+34 
+ 
+Fig. 5.1. Active-Learning Controlled Experiment: Precision@2 Learning Curves 
+and P@2 Gain by Market Size 
+Table 5.2 
+Executed Controlled Experiment: Precision@2 and NDCG at the 150-Label 
+Budget, Mean over 80 Replicate Markets 
+Market 
+(workers/jobs) 
+Fixed P@2 al_safe P@2 (T = 
+150) 
+al_raw 
+P@2 
+NDCG fixed 
+to safe 
+30 / 20 0.637 0.648 0.656 0.955 to 0.968 
+120 / 80 0.881 0.950 0.963 0.950 to 0.980 
+300 / 150 0.916 0.972 0.903 0.949 to 0.977 
+ 
+Table 5.2 lists the final -budget values. On 120 / 80 the regularised learner 
+improves Precision@2 to 0.950 from 0.881 (6.9 percentage points) and on 300 / 150 
+to 0.972 from 0.916 (5.7 points), both above the five -point threshold of Section 5.6, 
+while the 30 / 20 gain of 1.1 points falls inside the baseline interval. NDCG improves 
+in the same direction on every market, the regularised learner never falls below the 
+fixed baseline after the first checkpoint, and validation NDCG (on feedback withheld 
+from the updates) rises from 0.956 to 0.980 on 120 / 80. The unregularised control 
+degrades to 0.903 on 300 / 150, below the 0.916 baseline, showing the cost of 
+dropping the safeguards under sparse feedback. A clean -label recovery check fits the 
+hidden weights to a maximum absolute deviation of 3.70 points with all five factors 
+moving in the correct direction; hand -computed Precision@1 and NDCG match the 
+library to 1e-9, and a re-run of the same seed reproduces every metric exactly. 
+ 
+
+=== PAGE 35 ===
+35 
+RESULTS AND CONCLUSIONS 
+The research and  engineering activities reported here produced the following 
+results: 
+1. Literature synthesis: the review showed that skilled -trades hiring in Latvia 
+leans heavily on informal networks and personal referrals ( Hoffman, 
+2017), justifying a gesture-driven, mobile-first approach. 
+2. Regulatory architecture: a compliant hybrid human -in-the-loop architecture 
+was formulated that fulfils the transparency and oversight mandates of 
+Regulation (EU) 2024/1689 (European Parliament & Council, 2024a). 
+3. Prototype verification: a three -tier system ( FastAPI, Express, React) 
+supporting reciprocal swiping, multi -factor ranking and mutual -match 
+messaging was built, and its builds, schema contracts, 13 API routes, 
+scrypt password hashing and expiring session tokens were verified. 
+4. Evaluation methodology and result: a six -metric evaluation methodology 
+(Precision@K, Recall@K, match success, task time, NDCG@K, MRR) 
+was established, voice and calendar extensions were de -scoped, and a 
+preliminary controlled experiment showed  the safeguarded active learner 
+improving Precision@2 by 6.9 and 5.7 percentage points on the two larger 
+replicate markets and matching the fixed weights on the smallest. 
+The next steps are to extend the controlled experiment to the regions left out of 
+phase one, complete the verification -hardening plan (negative and concurrency cases, 
+and automated pytest and supertest suites), run the final -stage comparison with any 
+available participants, and write the results and discussion chapters of the final thesis. 
+Taken together, this report demonstrates an end -to-end path from a clearly 
+defined labour-market problem to a running prototype and an executed evaluation of 
+its active -learning layer. The remaining semester's work is substantial but well 
+scoped: extending the seed market to the regions left out of phase one, broadening the 
+comparison to the full metric set and to real participants, and completing the 
+hardening plan. The main risk is not technical feasibility, which the prototype, its 
+verification and the preliminary experiment support, but the effect size that an 
+interpretable ranker can deliver once the synthetic market is replaced by real 
+feedback; for this reason the bias audit and the published seed generator will form 
+part of the final write-up. 
+=== PAGE 36 ===
+36 
+ 
+=== PAGE 37 ===
+37 
+LIST OF REFERENCES 
+Amaral Cejas, O., Abualhaija, S., Sannier, N., Ceci, M., & Bianculli, D. (2026). 
+GDPR-relevant privacy concerns in mobile apps research: A systematic 
+literature review. Information and Software Technology, 201, 108332. 
+https://doi.org/10.1016/j.infsof.2026.108332 
+Amershi, S., Weld, D., Vorvoreanu, M., Fourney, A., Nushi, B., Collisson, P., Suh, J., 
+Iqbal, S., Bennett, P. N., Inkpen, K., Teevan, J., Kikin-Gil, R., & Horvitz, E. 
+(2019). Guidelines for human-AI interaction. Proceedings of the 2019 CHI 
+Conference on Human Factors in Computing Systems, 1-13. 
+https://doi.org/10.1145/3290605.3300233 
+Autor, D. H. (2001). Wiring the labor market. Journal of Economic Perspectives, 
+15(1), 25-40. https://doi.org/10.1257/jep.15.1.25 
+Barocas, S., & Selbst, A. D. (2016). Big data's disparate impact. California Law 
+Review, 104(3), 671-732. https://doi.org/10.2139/ssrn.2477899 
+Cedefop. (2024). Vocational education and training in Europe: Latvia. European 
+Centre for the Development of Vocational Training. 
+https://www.cedefop.europa.eu/tools/vet-in-europe/systems/latvia 
+CMS Law. (2024, October 23). Directive (EU) 2024/2831: Transforming platform 
+work in the EU. CMS Legal Insights. https://cms.law/en/aut/legal-updates/from-
+gig-to-guarantee-how-the-eu-is-transforming-platform-work 
+Conneau, A., Khandelwal, K., Goyal, N., Chaudhary, V., Wenzek, G., Guzman, F., 
+Grave, E., Ott, M., Zettlemoyer, L., & Stoyanov, V. (2020). Unsupervised 
+cross-lingual representation learning at scale. Proceedings of ACL 2020, 8440-
+8451. https://doi.org/10.18653/v1/2020.acl-main.747 
+Cross-Sectoral Coordination Centre. (2020). National Development Plan of Latvia for 
+2021-2027 (NDP2027). Cross-Sectoral Coordination Centre, Cabinet of 
+Ministers of the Republic of Latvia. https://www.pkc.gov.lv/en/national-
+development-plan 
+Dellermann, D., Ebel, P., Söllner, M., & Leimeister, J. M. (2019). Hybrid 
+intelligence. Business & Information Systems Engineering, 61(5), 637-643. 
+https://doi.org/10.1007/s12599-019-00595-2 
+Elahi, M., Ricci, F., & Rubens, N. (2016). A survey of active learning in collaborative 
+filtering recommender systems. Computer Science Review, 20, 29-50. 
+https://doi.org/10.1016/j.cosrev.2016.05.002 
+European Commission. (2026). 2026 Country Report - Latvia (SWD(2026) 214 final). 
+Directorate-General for Economic and Financial Affairs, European 
+Commission. https://economy-finance.ec.europa.eu 
+European Labour Authority. (2026). EURES report on labour shortages and surpluses 
+2025. Publications Office of the European Union, Luxembourg. 
+https://www.ela.europa.eu/en/publications/labour-shortages-and-surpluses-
+europe-2025 
+European Parliament and Council of the European Union. (2024a). Regulation (EU) 
+2024/1689 laying down harmonised rules on artificial intelligence (Artificial 
+=== PAGE 38 ===
+38 
+Intelligence Act). Official Journal of the European Union, L 2024/1689. 
+https://eur-lex.europa.eu/eli/reg/2024/1689/oj 
+European Parliament and Council of the European Union. (2024b). Directive (EU) 
+2024/2831 on improving working conditions in platform work. Official Journal 
+of the European Union, L, 2024/2831, 11.11.2024. https://eur-
+lex.europa.eu/eli/dir/2024/2831/oj 
+Hazans, M. (2019). Emigration from Latvia: A brief history and driving forces in the 
+twenty-first century. In R. Kasa & I. Mierina (Eds.), The emigrant communities 
+of Latvia: National identity, transnational belonging, and diaspora politics (pp. 
+35-68). Springer International Publishing. https://doi.org/10.1007/978-3-030-
+12092-4_3 
+Hoffman, M. (2017). The value of hiring through employee referrals in developed 
+countries. IZA World of Labor, 369. https://doi.org/10.15185/izawol.369 
+Horton, J. J. (2017). The effects of algorithmic labor market recommendations: 
+Evidence from a field experiment. Journal of Labor Economics, 35(2), 345-385. 
+https://doi.org/10.1086/689213 
+Hu, J., Ruder, S., Siddhant, A., Graham, Y., Firat, O., & Johnson, M. (2020). 
+XTREME: A massively multilingual multi-task benchmark for evaluating cross-
+lingual generalised representations. Proceedings of ICML 2020, 4411-4421. 
+https://proceedings.mlr.press/v119/hu20a.html 
+Iyengar, S. S., & Lepper, M. R. (2000). When choice is demotivating: Can one desire 
+too much of a good thing? Journal of Personality and Social Psychology, 79(6), 
+995-1006. https://doi.org/10.1037/0022-3514.79.6.995 
+Jobtech Alliance. (2026, March 5). From cold start to liquidity: How jobtech 
+platforms escape the “chicken-and-egg dilemma.” Jobtech Alliance Library. 
+https://jobtechalliance.com/two-sided-marketplace-cold-start-problem 
+Kellogg, K. C., Valentine, M. A., & Christin, A. (2020). Algorithms at work: The new 
+contested terrain of control. Academy of Management Annals, 14(1), 366-410. 
+https://doi.org/10.5465/annals.2018.0174 
+Köchling, A., & Wehner, M. C. (2020). Discriminated by an algorithm: A systematic 
+review of discrimination and fairness by algorithmic decision-making in the 
+context of HR recruitment. Business Research, 13(3), 795-848. 
+https://doi.org/10.1007/s40685-020-00134-w 
+Ministry of Economics of the Republic of Latvia. (2020, June 25). Labour market 
+forecasts of Latvia until 2040 have been prepared. Ministry of Economics, 
+Republic of Latvia. https://www.em.gov.lv/en/article/labour-market-forecasts-
+latvia-until-2040-have-been-prepared 
+Obaid, I., Farooq, M. S., & Abid, A. (2020). Gamification for recruitment and job 
+training: Model, taxonomy, and challenges. IEEE Access, 8, 65164-65178. 
+https://doi.org/10.1109/ACCESS.2020.2984178 
+OECD. (2019a). OECD Economic Surveys: Latvia 2019. OECD Publishing. 
+https://doi.org/10.1787/f8c2f493-en 
+OECD. (2019b). Evaluating Latvia's active labour market policies. OECD Publishing. 
+https://doi.org/10.1787/6037200a-en 
+=== PAGE 39 ===
+39 
+Palomares, I., Porcel, C., Pizzato, L., Guy, I., & Herrera-Viedma, E. (2021). 
+Reciprocal recommender systems: Analysis of state-of-art literature, challenges 
+and opportunities towards social recommendation. Information Fusion, 69, 103-
+127. https://doi.org/10.1016/j.inffus.2020.12.001 
+Raghavan, M., Barocas, S., Kleinberg, J., & Levy, K. (2020). Mitigating bias in 
+algorithmic hiring. Proceedings of the 2020 Conference on Fairness, 
+Accountability, and Transparency, 469-481. 
+https://doi.org/10.1145/3351095.3372828 
+Raghavendra, G. H., & Chitra, K. (2025). Firebase-integrated mobile platform for 
+swipe-driven job matching (SwipeRight). Journal of Innovation and 
+Technology, 2025(2). https://doi.org/10.61453/joit.v2025no27 
+Rigotti, C., & Fosch-Villaronga, E. (2024). Fairness, AI & recruitment. Computer 
+Law & Security Review, 53, 105966. https://doi.org/10.1016/j.clsr.2024.105966 
+Rochet, J.-C., & Tirole, J. (2003). Platform competition in two-sided markets. Journal 
+of the European Economic Association, 1(4), 990-1029. 
+https://doi.org/10.1162/154247603322493212 
+Rubens, N., Elahi, M., Sugiyama, M., & Kaplan, D. (2015). Active learning in 
+recommender systems. In Recommender Systems Handbook (pp. 809-846). 
+Springer. https://doi.org/10.1007/978-1-4899-7637-6_24 
+Schein, A. I., Popescul, A., Ungar, L. H., & Pennock, D. M. (2002). Methods and 
+metrics for cold-start recommendations. Proceedings of the 25th Annual 
+International ACM SIGIR Conference on Research and Development in 
+Information Retrieval, 253-260. https://doi.org/10.1145/564376.564421 
+Settles, B. (2012). Active learning. Morgan & Claypool Publishers. 
+https://doi.org/10.2200/S00429ED1V01Y201207AIM018 
+Waleson, T. (2022). Swipe worth the hype? Investigating the influence of fast and 
+slow online dating and success on wellbeing (Master's thesis, Tilburg 
+University). Tilburg School of Humanities and Digital Sciences. 
+https://research.tilburguniversity.edu/en/studentTheses/ 
+Yao, Y., Xu, J., & Gao, Z. (2023). A study of reciprocal job recommendation for 
+college graduates integrating semantic keyword matching and social 
+networking. Applied Sciences, 13(22), 12305. 
+https://doi.org/10.3390/app132212305 
+ 
+=== PAGE 40 ===
+40 
+APPENDIX: SHARED DATA CONTRACT AND API SURFACE 
+(EXTRACT) 
+The following is an extract of shared/schema.json, the single source of truth for 
+worker and job cards, swipes, matches and feedback, mirrored in shared/contract.ts 
+and shared/models.py, together with the Express API surface. 
+Trade    = electrician | plumber | welder | carpenter | hvac 
+Language = lv | ru | en 
+Avail    = immediate | one_to_two_weeks | date 
+Season   = summer | winter | all_year 
+Worker   = { id, name, trade, skills[], experience_years, district, 
+languages[], 
+             availability, available_from, hourly_rate_eur } 
+Job      = { id, employer, title, trade, required_skills[], 
+district, 
+             pay_min_eur_h, pay_max_eur_h, start, start_date, 
+season, description_lv } 
+Swipe    = { id, actor_type, actor_id, target_type, target_id, 
+direction } 
+Match    = { id, worker_id, job_id } 
+Feedback = { id, worker_id, job_id, label, by } 
+User     = { username (min 3 chars), password_hash (scrypt) } 
+ChatMessage = { id, text, by, time } 
+API      = /health, /api/auth/{register,login,me,logout}, 
+           /api/workers, /api/jobs, /api/deck/{worker|job}/:id, 
+           /api/swipes, /api/matches, /api/chats/:matchId 
+Rank     = POST /rank -> { results: [ { id, score, reasons[] } ] } 
+Deck     = GET /api/deck/... -> { cards: [ { id, score, reasons[], 
+item } ] } 
+Health   = GET /health -> { status: "ok", service: "meistermatch-
+api" } 
+AuthFail = 401 -> { error: "not authenticated" }  /  400 | 404 | 409 
+on bad input 
+Seed     = 30 workers (w001..w030), 20 jobs (j001..j020), 10 
+districts 
+Districts= Agenskalns, Centrs, Imanta, Jugla, Kengarags, Plavnieki, 
+           Purvciems, Sarkandaugava, Teika, Ziepniekkalns 

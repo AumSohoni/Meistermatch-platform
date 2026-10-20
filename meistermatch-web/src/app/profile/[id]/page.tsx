@@ -24,6 +24,7 @@ export default function ProfilePage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
       <Link
         href="/swipe"
+        scroll={false}
         className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-black mb-6"
       >
         <ArrowLeft className="w-3.5 h-3.5" /> Back to Swipe Mode
